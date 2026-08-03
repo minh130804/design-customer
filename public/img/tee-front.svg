@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200">
+  <rect width="1200" height="1200" fill="#f4f2ee"/>
+  <g fill="#222222">
+    <path d="M420 250 L520 210 Q600 270 680 210 L780 250 L860 330 L800 400 L760 370 L760 980 Q600 1010 440 980 L440 370 L400 400 L340 330 Z"/>
+  </g>
+  <g stroke="#3a3a3a" stroke-width="2" fill="none" opacity=".7">
+    <path d="M470 300 Q600 340 730 300"/>
+    <path d="M448 372 L448 970"/><path d="M752 372 L752 970"/>
+  </g>
+  <g transform="translate(600 620)">
+    <g fill="none" stroke="#e8e2d4" stroke-width="5">
+      <path d="M0 -110 C 52 -58 52 30 0 88 C -52 30 -52 -58 0 -110 Z"/>
+      <path d="M0 88 C -60 40 -118 40 -150 -6 C -96 -34 -40 -14 0 30"/>
+      <path d="M0 88 C 60 40 118 40 150 -6 C 96 -34 40 -14 0 30"/>
+      <path d="M0 88 C -30 130 -96 148 -140 138 C -110 96 -50 74 0 88"/>
+      <path d="M0 88 C 30 130 96 148 140 138 C 110 96 50 74 0 88"/>
+      <circle cx="0" cy="10" r="16"/>
+    </g>
+    <text x="0" y="188" text-anchor="middle" font-family="Georgia, serif" font-size="30"
+          letter-spacing="8" fill="#e8e2d4">LOTUS</text>
+  </g>
+  <text x="600" y="1140" text-anchor="middle" font-family="Inter, system-ui, sans-serif"
+        font-size="26" fill="#8a8578">Front view · Black · relaxed fit</text>
+</svg>

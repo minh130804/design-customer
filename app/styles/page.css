@@ -1,0 +1,734 @@
+/* ============================================================
+   BEM · vỏ route và các trang trong `app/`
+   Nạp từ app/globals.css (entry duy nhất) — đứng CUỐI vì trang có quyền
+   sắp đặt các khối component, không phải ngược lại.
+   ============================================================ */
+
+@layer components {
+  /* ── page · mảnh dùng chung của mọi route ────────────────
+     Bốn thứ này lặp lại ở gần như mọi trang: một bề rộng tập trung, một tiêu
+     đề, một câu dẫn dưới tiêu đề, và một dải thông báo. Trước đây chúng là
+     `mx-auto max-w-[520px]` / `mb-3 text-body-sm text-muted` gõ lại ở mỗi file,
+     nên đổi nhịp trang phải sửa hai chục chỗ mà không cách nào biết đã hết. */
+  .page__focus {
+    @apply mx-auto max-w-[520px];
+  }
+  .page__focus--md {
+    @apply max-w-[620px];
+  }
+  /* 720px: quá 75 ký tự một dòng thì mắt mất dấu khi xuống dòng — với văn bản
+     pháp lý người ta vốn đã đọc miễn cưỡng, điều đó đủ để họ bỏ. */
+  .page__focus--lg {
+    @apply max-w-[720px];
+  }
+  .page__focus--xl {
+    @apply max-w-[880px];
+  }
+  .page__title {
+    @apply mb-3;
+  }
+  .page__title--tight {
+    @apply mb-1;
+  }
+  .page__title--spaced {
+    @apply mb-3 mt-3;
+  }
+  .page__lede {
+    @apply mb-3 text-body-sm text-muted;
+  }
+  .page__lede--under-title {
+    @apply mt-0.5 text-body-sm text-muted;
+  }
+  .page__notice {
+    @apply mb-3;
+  }
+  .page__notice--after {
+    @apply mt-3;
+  }
+  .page__card {
+    @apply mt-3;
+  }
+  .page__stack {
+    @apply space-y-3;
+  }
+  .page__empty-icon {
+    @apply h-8 w-8;
+  }
+
+  /* ── shop-shell · vỏ marketplace ─────────────────────────── */
+  .shop-shell__main {
+    @apply mx-auto max-w-page px-3 pb-8 pt-3 sm:px-4;
+  }
+
+  /* ── checkout-shell · vỏ checkout ────────────────────────
+     CỐ TÌNH không có vỏ marketplace: không thanh tìm kiếm, không dải danh mục,
+     không chân trang nhiều cột. Ở bước thanh toán, mỗi liên kết điều hướng là
+     một lối thoát khỏi phễu. Logo vẫn bấm được — đó là lối ra hợp lệ duy nhất,
+     và chặn nó lại làm người dùng thấy bị nhốt. */
+  .checkout-shell__header {
+    @apply border-b border-line bg-surface;
+  }
+  .checkout-shell__inner {
+    @apply mx-auto flex h-[68px] max-w-focus items-center justify-between gap-3 px-4;
+  }
+  .checkout-shell__logo {
+    @apply text-title-lg font-medium tracking-tight text-brand outline-none;
+  }
+  .checkout-shell__logo:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  /* Chữ tĩnh cạnh biểu tượng khoá, không phải huy hiệu nhấp nháy: huy hiệu bảo
+     mật động trông giống quảng cáo hơn là bảo đảm. */
+  .checkout-shell__secure {
+    @apply flex items-center gap-1 text-caption text-muted;
+  }
+  .checkout-shell__secure-icon {
+    @apply h-3.5 w-3.5;
+  }
+  .checkout-shell__steps {
+    @apply border-b border-line bg-surface-2;
+  }
+  .checkout-shell__steps-inner {
+    @apply mx-auto max-w-focus px-4 py-2;
+  }
+  .checkout-shell__main {
+    @apply mx-auto max-w-focus px-4 pb-10 pt-4;
+  }
+
+  /* ── home · trang chủ ────────────────────────────────────── */
+  .home__hero {
+    @apply mt-3;
+  }
+  .home__promo,
+  .home__shops {
+    @apply mt-10;
+  }
+  .home__shops-heading {
+    @apply mb-4;
+  }
+  .home__shops-grid {
+    @apply grid gap-3 sm:grid-cols-2 lg:grid-cols-3;
+  }
+  /* Thẻ shop: cả thẻ bấm được qua `::after` trải kín, nên `relative` nằm ở
+     khối chứ không rải trong JSX. */
+  .shop-teaser {
+    @apply relative;
+  }
+  .shop-teaser__head {
+    @apply flex items-baseline justify-between gap-2;
+  }
+  .shop-teaser__name {
+    @apply text-title font-medium text-ink;
+  }
+  .shop-teaser__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .shop-teaser__star-seller {
+    @apply shrink-0 text-caption font-medium text-star-seller;
+  }
+  .shop-teaser__location {
+    @apply mt-0.5 text-caption text-faint;
+  }
+  .shop-teaser__tagline {
+    @apply mt-1 line-clamp-2 text-body-sm text-muted;
+  }
+  .shop-teaser__rating {
+    @apply mt-1.5;
+  }
+
+  /* ── account-layout · menu dọc 200px + nội dung ──────────
+     Trên điện thoại menu chuyển thành dải cuộn ngang chứ không thu vào ngăn
+     kéo: chỉ có bốn mục, và một ngăn kéo cho bốn mục là thêm một cú chạm không
+     đổi lại được gì. */
+  .account-layout {
+    @apply mt-3 flex flex-col gap-4 lg:flex-row lg:gap-6;
+  }
+  .account-layout__nav {
+    @apply no-scrollbar flex gap-1 overflow-x-auto border-b border-line pb-1;
+    @apply lg:w-[200px] lg:shrink-0 lg:flex-col lg:border-b-0 lg:pb-0;
+  }
+  .account-layout__link {
+    @apply flex shrink-0 items-center gap-1.5 rounded-base px-2 py-1.5;
+    @apply text-title-sm text-ink outline-none transition-colors;
+  }
+  .account-layout__link:hover {
+    @apply bg-surface-2;
+  }
+  .account-layout__link:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .account-layout__icon {
+    @apply h-4 w-4 text-muted;
+  }
+  .account-layout__body {
+    @apply min-w-0 flex-1;
+  }
+
+  /* ── notifications-page ──────────────────────────────────── */
+  .notifications__card {
+    @apply overflow-hidden;
+  }
+
+  /* ── order-card · một đơn trong danh sách ────────────────── */
+  .order-card__head {
+    @apply flex flex-wrap items-center justify-between gap-2 border-b border-line px-3 py-2;
+  }
+  .order-card__title {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .order-card__meta {
+    @apply text-caption text-muted;
+  }
+  .order-card__actions {
+    @apply flex items-center gap-2;
+  }
+
+  /* ── order-detail ────────────────────────────────────────
+     Bảng tiền ở đây phải **cộng tay ra đúng tổng**. Người mua mở lại đơn cũ
+     thường là vì đang thắc mắc về một con số; nếu các dòng không cộng đúng thì
+     thắc mắc đó thành một ticket, và ticket đó tốn nhiều hơn lợi nhuận của đơn. */
+  .order-detail__head {
+    @apply mb-3 flex flex-wrap items-baseline justify-between gap-2;
+  }
+  .order-detail__lines-head {
+    @apply border-b border-line px-3 py-2;
+  }
+  .order-detail__lines-title {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .order-detail__shop-link:hover {
+    @apply underline;
+  }
+  .order-detail__placed {
+    @apply text-caption text-muted;
+  }
+  .order-detail__aside {
+    @apply space-y-3;
+  }
+  .order-detail__panel-title {
+    @apply text-title font-medium text-ink;
+  }
+  .order-detail__rows {
+    @apply mt-2 space-y-1 text-body-sm;
+  }
+  .order-detail__row {
+    @apply flex items-baseline justify-between gap-2;
+  }
+  .order-detail__term {
+    @apply text-muted;
+  }
+  .order-detail__free {
+    @apply font-medium text-money;
+  }
+  .order-detail__total {
+    @apply mt-2 flex items-baseline justify-between border-t border-line pt-2;
+  }
+  .order-detail__total-label {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .order-detail__fineprint {
+    @apply mt-1 text-caption text-faint;
+  }
+  .order-detail__delivery {
+    @apply mt-1 text-body-sm text-muted;
+  }
+  .order-detail__help {
+    @apply mt-1.5 flex flex-col gap-1.5;
+  }
+
+  /* ── order-placed · đặt hàng xong ────────────────────────
+     Thứ tự khối theo thứ tự NHẬN ĐƯỢC GIÁ TRỊ: file tải ngay → hàng sẽ tới →
+     mời tạo tài khoản. Khối cuối đặt cuối vì đó là lúc thiện chí cao nhất; đặt
+     lên đầu là xin xỏ trước khi cho. */
+  .order-placed__head {
+    @apply flex items-start gap-2;
+  }
+  .order-placed__icon {
+    @apply mt-1 h-6 w-6 shrink-0 text-money;
+  }
+  .order-placed__lede {
+    @apply mt-1 text-body text-muted;
+  }
+  .order-placed__number {
+    @apply tabular;
+  }
+  /* Viền màu hàng số: đây là khối duy nhất trên trang chở giá trị nhận được
+     ngay, và nó phải tách khỏi khối "sẽ tới sau" mà không cần thêm chữ. */
+  .order-placed__card {
+    @apply mt-4 border-kind-file;
+  }
+  .order-placed__card--later {
+    @apply mt-3 border-line;
+  }
+  .order-placed__panel-title {
+    @apply flex items-center gap-1.5 text-title font-medium text-ink;
+  }
+  .order-placed__panel-icon {
+    @apply h-4 w-4;
+  }
+  .order-placed__panel-icon--file {
+    @apply text-kind-file;
+  }
+  .order-placed__list {
+    @apply mt-2 space-y-1.5;
+  }
+  .order-placed__item {
+    @apply flex items-center justify-between gap-2;
+  }
+  .order-placed__item--wrap {
+    @apply flex-wrap gap-1.5;
+  }
+  .order-placed__item-title {
+    @apply min-w-0 flex-1 truncate text-body-sm text-ink;
+  }
+  .order-placed__variant {
+    @apply text-muted;
+  }
+  .order-placed__download-icon {
+    @apply h-3.5 w-3.5;
+  }
+  .order-placed__address {
+    @apply mt-0.5 text-caption text-muted;
+  }
+  .order-placed__note {
+    @apply mt-2 text-caption text-muted;
+  }
+  .order-placed__actions {
+    @apply mt-4 flex flex-wrap gap-2;
+  }
+
+  /* ── return-form · yêu cầu đổi trả ───────────────────────
+     Lý do trả hàng quyết định AI TRẢ PHÍ GỬI VỀ, nên nó là thẻ radio có mô tả
+     chứ không phải `<select>` cho gọn: giấu hệ quả tới màn xác nhận là cách
+     chắc chắn nhất để biến một lượt đổi trả thành một lượt khiếu nại. */
+  .return-form__title {
+    @apply mb-2 text-title font-medium text-ink;
+  }
+  .return-form__lines {
+    @apply space-y-1.5;
+  }
+  .return-form__line {
+    @apply flex cursor-pointer items-center gap-2 rounded-base p-1 transition-colors;
+  }
+  .return-form__line:hover {
+    @apply bg-surface-2;
+  }
+  .return-form__thumb {
+    @apply relative h-12 w-12 shrink-0 overflow-hidden rounded-base border border-line bg-surface-2;
+  }
+  .return-form__reasons-title {
+    @apply mb-1.5 text-title font-medium text-ink;
+  }
+  .return-form__reasons {
+    @apply space-y-1.5;
+  }
+  .return-form__section {
+    @apply mt-3;
+  }
+  .return-form__label {
+    @apply mb-1 block text-title-sm font-medium text-ink;
+  }
+  .return-form__count {
+    @apply tabular mt-0.5 text-right text-caption text-faint;
+  }
+  .return-form__summary {
+    @apply mt-3 space-y-1 border-t border-line pt-2.5 text-body-sm;
+  }
+  .return-form__summary-row {
+    @apply flex items-baseline justify-between;
+  }
+  .return-form__summary-term {
+    @apply text-muted;
+  }
+  .return-form__summary-value {
+    @apply text-body-sm text-ink;
+  }
+  .return-form__submit {
+    @apply mt-3;
+  }
+  .return-form__fineprint {
+    @apply mt-1.5 text-caption text-faint;
+  }
+
+  /* ── upload-drop · ô "thêm ảnh" viền đứt ─────────────────
+     Dùng chung ở form đổi trả và form đánh giá: cùng một hành động, cùng một
+     hình. Viền đứt nói "chỗ này còn trống", khác với một nút đặc. */
+  .upload-drop {
+    @apply flex w-full items-center justify-center gap-1.5 rounded-card;
+    @apply border border-dashed border-line py-3;
+    @apply text-title-sm font-medium text-ink outline-none transition-all duration-200;
+  }
+  .upload-drop:hover {
+    @apply border-ink bg-surface-2;
+  }
+  .upload-drop:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .upload-drop--after {
+    @apply mt-2;
+  }
+  .upload-drop__icon {
+    @apply h-4 w-4;
+  }
+
+  /* ── review-form · viết đánh giá ─────────────────────────
+     Chọn dòng hàng TRƯỚC khi chấm: một đơn có ba món, đánh giá gắn vào món nào
+     phải rõ, nếu không nhận xét về cái áo sẽ nằm dưới bộ icon. */
+  .review-form__picker {
+    @apply mt-3;
+  }
+  .review-form__picker-legend {
+    @apply mb-1 text-title-sm font-medium text-ink;
+  }
+  .review-form__thumbs {
+    @apply no-scrollbar flex gap-1.5 overflow-x-auto pb-1;
+  }
+  .review-form__thumb {
+    @apply relative h-16 w-16 shrink-0 overflow-hidden rounded-base border-2 border-transparent;
+    @apply bg-surface-2 outline-none transition-all duration-200;
+  }
+  .review-form__thumb:hover {
+    @apply -translate-y-0.5 border-line-strong shadow-elev-2;
+  }
+  .review-form__thumb:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .review-form__thumb--on,
+  .review-form__thumb--on:hover {
+    @apply border-ink;
+  }
+  .review-form__thumb-image {
+    @apply object-cover;
+  }
+  .review-form__picked {
+    @apply mt-1 text-caption text-muted;
+  }
+  .review-form__overall-label {
+    @apply mb-1 block text-title-sm font-medium text-ink;
+  }
+  .review-form__group {
+    @apply mt-3 border-t border-line pt-3;
+  }
+  .review-form__axes {
+    @apply mt-3 space-y-2 border-t border-line pt-3;
+  }
+  .review-form__axis {
+    @apply flex flex-wrap items-center justify-between gap-2;
+  }
+  .review-form__axis-label {
+    @apply text-body-sm text-muted;
+  }
+  .review-form__label {
+    @apply mb-1 block text-title-sm font-medium text-ink;
+  }
+  .review-form__meta {
+    @apply mt-0.5 flex justify-between text-caption text-faint;
+  }
+  .review-form__count {
+    @apply tabular;
+  }
+  .review-form__upload-note {
+    @apply mt-1 text-caption text-faint;
+  }
+  .review-form__submit {
+    @apply mt-3;
+  }
+
+  /* ── category-page ───────────────────────────────────────
+     Dải thẻ nhánh con đứng TRÊN thanh lọc: đi đúng nhánh loại bỏ nhiều kết quả
+     sai hơn bất kỳ bộ lọc nào. */
+  .category-page__head {
+    @apply text-center;
+  }
+  .category-page__crumbs {
+    @apply flex justify-center;
+  }
+  .category-page__title {
+    @apply mt-2;
+  }
+  .category-page__tiles {
+    @apply mt-4;
+  }
+
+  /* ── search-page ─────────────────────────────────────────── */
+  .search-page__title {
+    @apply mt-2;
+  }
+
+  /* ── gift-cards-page ─────────────────────────────────────── */
+  .gift-cards-page__intro {
+    @apply mt-2 max-w-[62ch];
+  }
+  .gift-cards-page__lede {
+    @apply mt-1 text-body text-muted;
+  }
+  .gift-cards-page__form {
+    @apply mt-6;
+  }
+
+  /* ── help-page · trang chính sách, một cột ───────────────── */
+  .help-page__title {
+    @apply mt-3;
+  }
+  .help-page__intro,
+  .help-page__body {
+    @apply text-body text-muted;
+  }
+  .help-page__intro {
+    @apply mt-2;
+  }
+  .help-page__body {
+    @apply mt-1;
+  }
+  .help-page__sections {
+    @apply mt-4 space-y-4;
+  }
+  .help-page__heading {
+    @apply font-serif text-title-lg text-ink;
+  }
+  .help-page__actions {
+    @apply mt-6 flex flex-wrap gap-2;
+  }
+
+  /* ── product-page ────────────────────────────────────────
+     Khối chọn–mua chặn 1120px thay vì chạy hết 1400px của trang: khung ảnh
+     vuông ở bề ngang đầy đủ cao tới hơn 800px — to hơn cả một màn laptop, nên
+     người dùng phải cuộn mới thấy nút mua. Chặn lại thì ảnh còn ~610px và toàn
+     bộ phần chọn–mua nằm gọn trên một màn.
+
+     Các dải bên dưới vẫn chạy hết chiều ngang: ở đó rộng hơn nghĩa là thêm
+     được một cột sản phẩm. */
+  .product-page__crumbs {
+    @apply mb-4 flex justify-center;
+  }
+  .product-page__core {
+    @apply mx-auto max-w-[1120px];
+  }
+  /* Cột phải khoá 340/380px thay vì `1fr`: với `2fr_1fr` trên màn 1400px nó
+     rộng ~440px và phần chọn–mua trông ngang hàng với khung ảnh — thành phần
+     chính của trang thay vì phần phụ. */
+  .product-page__row {
+    @apply grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-10;
+    @apply xl:grid-cols-[minmax(0,1fr)_380px];
+  }
+  /* `items-start` ở hàng dưới chứ không stretch: cột trái dài mấy màn hình,
+     kéo khối accordion bên phải cao bằng nó là tạo ra một dải trống khổng lồ. */
+  .product-page__row--below {
+    @apply mt-6 lg:items-start;
+  }
+  .product-page__report {
+    @apply mt-3 flex justify-center;
+  }
+  .product-page__report-btn {
+    @apply inline-flex items-center gap-1.5 rounded-pill px-2.5 py-1;
+    @apply text-caption text-muted outline-none transition-colors;
+  }
+  .product-page__report-btn:hover {
+    @apply text-ink;
+  }
+  .product-page__report-btn:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .product-page__report-icon {
+    @apply h-3.5 w-3.5;
+  }
+  /* Không viền, không nền, không đổ bóng: cột này đã tách khỏi phần còn lại
+     bằng khoảng trắng 60px và bằng chính vị trí của nó. `scroll-mt-24` cho
+     thanh mua dính đáy cuộn tới đúng chỗ mà không chui dưới header. */
+  .product-page__buy {
+    @apply scroll-mt-24;
+  }
+  /* Khan hiếm — số THẬT từ backend, không phải đồng hồ đếm ngược bịa */
+  .product-page__scarcity {
+    @apply mb-1 flex items-center gap-1 text-title-sm font-medium text-critical;
+  }
+  .product-page__scarcity-icon {
+    @apply h-3.5 w-3.5;
+  }
+  /* TIÊU ĐỀ 16px thường, NHỎ HƠN giá — chủ ý: người mua vừa bấm vào từ ảnh
+     trong lưới nên đã biết đang xem cái gì, cái họ chưa biết là giá. */
+  .product-page__title {
+    @apply mt-2 text-body font-normal leading-snug text-ink;
+  }
+  .product-page__shop {
+    @apply mt-2 flex flex-wrap items-center gap-x-2 gap-y-1;
+  }
+  .product-page__shop-link {
+    @apply text-title-sm font-medium text-ink underline-offset-2 transition-colors;
+  }
+  .product-page__shop-link:hover {
+    @apply text-action underline;
+  }
+  /* `empty:mt-0` vì `KindBadge` trả về null cho `stock` và `pod` — không có
+     nhãn thì cũng không được để lại một khoảng trống 12px. */
+  .product-page__kind {
+    @apply mt-2 empty:mt-0;
+  }
+  .product-page__buy-box {
+    @apply mt-3;
+  }
+  .product-page__related {
+    @apply mt-12 border-t border-line pt-8;
+  }
+  .product-page__related-heading {
+    @apply mb-4;
+  }
+  .product-page__see-more {
+    @apply text-title-sm text-action underline-offset-2;
+  }
+  .product-page__see-more:hover {
+    @apply underline;
+  }
+  .product-page__foot {
+    @apply mt-8 border-t border-line pt-4;
+  }
+  .product-page__foot-text {
+    @apply text-caption text-muted;
+  }
+  .product-page__favourites {
+    @apply tabular;
+  }
+  .product-page__foot-crumbs {
+    @apply mt-2;
+  }
+  /* Chừa chỗ cho thanh dính đáy, nếu không nó che mất dòng cuối */
+  .product-page__spacer {
+    @apply h-16 lg:hidden;
+  }
+  /* Thanh này KHÔNG nhân bản nút mua — nhân bản nghĩa là hai chỗ cùng giữ
+     trạng thái biến thể và sớm muộn chúng lệch nhau. Nó chỉ CUỘN TỚI hộp mua
+     thật, nơi người dùng vẫn phải chọn size trước khi bấm. */
+  .product-page__bar {
+    @apply fixed inset-x-0 bottom-0 z-20 flex items-center gap-3 border-t border-line;
+    @apply bg-surface/95 px-3 py-2 shadow-elev-3 backdrop-blur lg:hidden;
+  }
+  .product-page__bar-info {
+    @apply min-w-0 flex-1;
+  }
+  .product-page__bar-shop {
+    @apply truncate text-caption text-muted;
+  }
+  .product-page__bar-cta {
+    @apply shrink-0;
+  }
+
+  /* ── shop-page ───────────────────────────────────────────── */
+  .shop-page__header {
+    @apply mt-3;
+  }
+  .shop-page__body {
+    @apply mt-6;
+  }
+  .shop-page__items {
+    @apply flex flex-col gap-6 lg:flex-row;
+  }
+  .shop-page__main {
+    @apply min-w-0 flex-1;
+  }
+
+  /* ── signin ──────────────────────────────────────────────
+     Hai chế độ trên MỘT trang, đổi bằng tab: người dùng thường không nhớ mình
+     đã có tài khoản hay chưa, và tách thành hai trang thì lần đoán sai nào
+     cũng tốn một lượt tải trang cộng một thông báo lỗi. */
+  .signin {
+    @apply mx-auto max-w-[460px];
+  }
+  .signin__lede {
+    @apply mt-1 text-body-sm text-muted;
+  }
+  .signin__tabs {
+    @apply mb-3;
+  }
+  .signin__divider {
+    @apply my-2.5 flex items-center gap-2;
+  }
+  .signin__rule {
+    @apply h-px flex-1 bg-line;
+  }
+  .signin__divider-text {
+    @apply text-caption text-faint;
+  }
+  .signin__magic-icon {
+    @apply h-4 w-4;
+  }
+  .signin__sent {
+    @apply mt-2;
+  }
+  .signin__guest {
+    @apply mt-3;
+  }
+  .signin__guest-title {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .signin__guest-text {
+    @apply mt-0.5 text-body-sm text-muted;
+  }
+  .signin__guest-cta {
+    @apply mt-1.5;
+  }
+
+  /* ── sell-page · đăng ký bán hàng ────────────────────────
+     Nền kem `--color-trust` trên thẻ biểu mẫu: ngay từ màn đầu người bán đã ở
+     trong một không gian màu khác với khu mua sắm. */
+  .sell-page__head {
+    @apply text-center;
+  }
+  .sell-page__lede {
+    @apply mx-auto mt-2 max-w-[60ch] text-body text-muted;
+  }
+  .sell-page__grid {
+    @apply mt-6 grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start;
+  }
+  .sell-page__steps {
+    @apply mt-4 space-y-4;
+  }
+  .sell-page__step {
+    @apply flex gap-3;
+  }
+  .sell-page__step-badge {
+    @apply grid h-8 w-8 shrink-0 place-items-center rounded-full border border-line;
+    @apply bg-surface text-ink;
+  }
+  .sell-page__step-icon {
+    @apply h-4 w-4;
+  }
+  .sell-page__step-title {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .sell-page__step-n {
+    @apply tabular text-faint;
+  }
+  .sell-page__step-body {
+    @apply mt-0.5 max-w-[62ch] text-body-sm text-muted;
+  }
+  .sell-page__notice {
+    @apply mt-5;
+  }
+  /* 92px = 68px header + 24px thở; cùng mốc dính với `.order-summary`. */
+  .sell-page__form-card {
+    @apply lg:sticky lg:top-[92px];
+  }
+  .sell-page__form-title {
+    @apply font-serif text-title-lg text-ink;
+  }
+  .sell-page__form-note {
+    @apply mt-0.5 text-caption text-muted;
+  }
+  .sell-page__form {
+    @apply mt-3;
+  }
+  .sell-page__terms {
+    @apply mb-3;
+  }
+  .sell-page__spinner {
+    @apply h-4 w-4 animate-spin;
+  }
+  .sell-page__error {
+    @apply mt-1.5 text-center text-caption text-critical;
+  }
+  .sell-page__signin {
+    @apply mt-2 text-center text-caption text-muted;
+  }
+}

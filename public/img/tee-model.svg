@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200">
+  <rect width="1200" height="1200" fill="#e7e2d8"/>
+  <rect y="900" width="1200" height="300" fill="#dcd6ca"/>
+
+  <!-- người mẫu -->
+  <g>
+    <ellipse cx="600" cy="1148" rx="150" ry="22" fill="#000" opacity=".08"/>
+    <circle cx="600" cy="238" r="66" fill="#c9a98c"/>
+    <path d="M534 232 Q600 150 666 232 Q640 196 600 192 Q560 196 534 232 Z" fill="#3a2e26"/>
+    <rect x="574" y="296" width="52" height="42" rx="16" fill="#c9a98c"/>
+
+    <!-- áo -->
+    <path d="M452 336 L536 306 Q600 348 664 306 L748 336 L806 400 L764 446 L736 424 L736 786
+             Q600 812 464 786 L464 424 L436 446 L394 400 Z" fill="#222222"/>
+    <g stroke="#3a3a3a" stroke-width="2" fill="none" opacity=".65">
+      <path d="M498 344 Q600 380 702 344"/>
+      <path d="M470 428 L470 778"/><path d="M730 428 L730 778"/>
+    </g>
+
+    <!-- hoạ tiết trên áo -->
+    <g transform="translate(600 566) scale(.62)" fill="none" stroke="#e8e2d4" stroke-width="6">
+      <path d="M0 -110 C 52 -58 52 30 0 88 C -52 30 -52 -58 0 -110 Z"/>
+      <path d="M0 88 C -60 40 -118 40 -150 -6 C -96 -34 -40 -14 0 30"/>
+      <path d="M0 88 C 60 40 118 40 150 -6 C 96 -34 40 -14 0 30"/>
+    </g>
+
+    <!-- tay và quần -->
+    <path d="M400 402 L372 604 L414 614 L446 436 Z" fill="#c9a98c"/>
+    <path d="M800 402 L828 604 L786 614 L754 436 Z" fill="#c9a98c"/>
+    <path d="M470 786 L470 1120 L546 1120 L566 850 L586 1120 L662 1120 L662 786 Z" fill="#5b6472"/>
+  </g>
+
+  <text x="600" y="1170" text-anchor="middle" font-family="Inter, system-ui, sans-serif"
+        font-size="24" fill="#7b7466">Model is 5′11″ / 180 cm wearing size L</text>
+</svg>

@@ -1,0 +1,96 @@
+/* ============================================================
+   BEM · luồng mở shop (đăng ký, xác thực email)
+   Nạp từ app/globals.css (entry duy nhất).
+   ============================================================ */
+
+@layer components {
+  /* ── verify-form · sáu ô mã xác thực ─────────────────────
+     Sáu ô chứ không phải một ô `maxLength=6`: một ô không cho biết mã dài bao
+     nhiêu cho tới khi người ta gõ hết. Dán mã từ email vào ô đầu vẫn điền đủ cả
+     sáu — xử lý ở `onPaste`. */
+  .verify-form {
+    @apply mx-auto max-w-[520px];
+  }
+  .verify-form--done {
+    @apply max-w-[560px];
+  }
+  .verify-form__head {
+    @apply flex items-start gap-2;
+  }
+  .verify-form__head-icon {
+    @apply mt-1 h-6 w-6 shrink-0 text-ink;
+  }
+  .verify-form__head-icon--ok {
+    @apply text-money;
+  }
+  .verify-form__lede {
+    @apply mt-1 text-body text-muted;
+  }
+  .verify-form__email {
+    @apply text-ink;
+  }
+  .verify-form__card {
+    @apply mt-4;
+  }
+  .verify-form__legend {
+    @apply mb-2 text-title-sm font-medium text-ink;
+  }
+  .verify-form__digits {
+    @apply flex justify-between gap-1.5;
+  }
+  /* Ngoại lệ có chủ ý của thang ô nhập 28px: ô mã cao 40px và chữ to hơn ô nhập
+     thường. Người dùng đang đối chiếu từng chữ số với email — đây là chỗ duy
+     nhất trong hệ thống mà đọc rõ quan trọng hơn gọn. */
+  .verify-form__digit {
+    @apply tabular h-10 w-full min-w-0 rounded-base border border-line bg-surface;
+    @apply text-center text-title font-medium text-ink outline-none transition-colors;
+  }
+  .verify-form__digit:focus {
+    @apply border-ink ring-1 ring-ink;
+  }
+  .verify-form__digit--invalid {
+    @apply border-critical;
+  }
+  .verify-form__error {
+    @apply mt-1.5 text-body-sm text-critical;
+  }
+  .verify-form__submit {
+    @apply mt-3;
+  }
+  .verify-form__spinner {
+    @apply h-4 w-4 animate-spin;
+  }
+  /* Viền nhạt hơn `--color-line` một nửa: đường kẻ này nằm TRONG một thẻ đã có
+     nền kem, viền đủ đậm ở đó đọc thành hai khối rời nhau. */
+  .verify-form__resend {
+    @apply mt-3 flex flex-wrap items-center justify-between gap-2;
+    @apply border-t border-line/60 pt-3;
+  }
+  .verify-form__resend-hint {
+    @apply text-caption text-muted;
+  }
+  .verify-form__notice {
+    @apply mt-3;
+  }
+  .verify-form__next-title {
+    @apply text-title font-medium text-ink;
+  }
+  .verify-form__next-list {
+    @apply mt-1.5 space-y-1 text-body-sm text-copy;
+  }
+  .verify-form__next-cta {
+    @apply mt-3;
+  }
+  .verify-form__next-icon {
+    @apply h-4 w-4;
+  }
+  .verify-form__foot {
+    @apply mt-3 text-center text-body-sm text-muted;
+  }
+  .verify-form__foot-link {
+    @apply text-action;
+  }
+  .verify-form__foot-link:hover {
+    @apply underline;
+  }
+}

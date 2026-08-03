@@ -1,0 +1,85 @@
+/* ============================================================
+   ENTRY CSS DUY NHẤT của storefront.
+   ============================================================
+
+   Chỉ tệp này `@import "tailwindcss"`, và chỉ tệp này được nạp từ mã React
+   (`app/layout.tsx`). Mọi tệp CSS khác nằm ở `app/styles/` và đi vào qua các
+   dòng `@import` bên dưới.
+
+   ── Vì sao đúng một entry ───────────────────────────────────────────────
+
+   Mỗi tệp có `@import "tailwindcss"` là một entry Tailwind riêng: nó sinh lại
+   toàn bộ preflight và bảng utility của chính nó. Ba tệp như vậy là ba bản sao
+   framework trong bundle. Gom về một entry thì Tailwind quét một lần, sinh một
+   lần, và mọi tệp con dùng chung một bảng.
+
+   ── Vì sao KHÔNG cần `@reference` ở các tệp con ────────────────────────
+
+   Tài liệu Tailwind v4 nói tệp dùng `@apply` "có thể cần" `@reference` trỏ về
+   stylesheet chính. Điều đó đúng khi tệp con được biên dịch RIÊNG (mỗi tệp một
+   lượt PostCSS, ví dụ CSS Modules hoặc `.css` cạnh component do bundler nạp
+   riêng). Ở đây các tệp con đi vào qua `@import` của chính entry này, nên chúng
+   nằm trong CÙNG một lượt biên dịch và đã thấy `@theme` — thêm `@reference` chỉ
+   là thừa. Đã kiểm: bỏ nó ra, `@apply bg-btn` vẫn dịch đúng thành
+   `var(--color-btn)`.
+
+   Đổi lại, `@apply` **chỉ nhận utility của Tailwind**, kể cả utility tự định
+   nghĩa bằng `@utility` trong `styles/base.css`. Nó KHÔNG nhận class BEM khác —
+   `@apply skeleton` sẽ báo `Cannot apply unknown utility class`. Cần dùng chung
+   thì gom vào một danh sách bộ chọn, hoặc đặt hai class trong JSX.
+
+   ── Thứ tự nạp có ý nghĩa ───────────────────────────────────────────────
+
+   `tailwindcss` phải đứng đầu vì nó khai thứ tự `@layer theme, base, components,
+   utilities`. Sau đó token trước, rồi lớp nền, rồi các khối BEM — khối BEM tham
+   chiếu token nên token phải có mặt trước.
+
+   Theo chuẩn CSS, mọi `@import` phải nằm trên mọi quy tắc khác. Vì vậy tệp này
+   cố tình KHÔNG chứa quy tắc nào — thêm một dòng CSS vào đây là chặn mất khả
+   năng `@import` thêm tệp sau đó. Ngoại lệ duy nhất là dòng `@source not` ở
+   CUỐI tệp: nó là chỉ thị build, Tailwind ăn rồi bỏ đi chứ không sinh CSS.
+   **Thêm tệp style mới thì dòng `@import` phải nằm TRÊN dòng đó.**
+   ============================================================ */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* token: màu, cỡ chữ, bo góc, đổ bóng, điểm ngắt, keyframes */
+@import "./styles/theme.css";
+
+/* cầu nối shadcn, reset trình duyệt, @utility tự định nghĩa */
+@import "./styles/base.css";
+
+/* khối BEM, một tệp cho mỗi nhóm component */
+@import "./styles/ui.css";
+@import "./styles/shared.css";
+@import "./styles/layout.css";
+@import "./styles/home.css";
+@import "./styles/commerce.css";
+@import "./styles/product.css";
+@import "./styles/shop.css";
+@import "./styles/gift.css";
+@import "./styles/sell.css";
+@import "./styles/page.css";
+
+/* ============================================================
+   LOẠI TÀI LIỆU KHỎI PHẠM VI QUÉT
+   ============================================================
+
+   Tailwind v4 quét MỌI tệp văn bản trong dự án dưới dạng chuỗi thuần và sinh
+   CSS cho bất cứ thứ gì đọc ra được như một utility. Nó không hiểu ngữ cảnh,
+   nên `CLAUDE.md` và `README.md` cũng bị quét.
+
+   Hậu quả không phải kích thước — nó là một lỗ hổng kỷ luật. `CLAUDE.md` liệt
+   kê `bg-[#222]`, `text-[13px]`, `lg:w-[240px]`, `mt-3`, `shrink-0` làm **ví dụ
+   phản diện** ("đừng viết thế này"), và chính vì được nhắc tên mà chúng có mặt
+   thật trong bản CSS. Gõ `className="bg-[#222]"` vào JSX là nó CHẠY — đúng thứ
+   tài liệu vừa cấm, và chạy được nhờ chính tài liệu đó.
+
+   Dòng dưới đây đóng lỗ hổng: bỏ tài liệu khỏi phạm vi quét thì các utility ấy
+   không còn tồn tại, và người gõ nhầm sẽ thấy ngay là không có tác dụng gì.
+
+   Không đụng tới `.tsx`/`.ts` — `sr-only` (lớp trợ năng dùng thật trong JSX)
+   vẫn phải được sinh ra.
+   ============================================================ */
+@source not "../**/*.md";

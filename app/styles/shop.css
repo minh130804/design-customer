@@ -1,0 +1,382 @@
+/* ============================================================
+   BEM · trang shop (đầu trang, rail trái, ba tab nội dung)
+   Nạp từ app/globals.css (entry duy nhất).
+   ============================================================ */
+
+@layer components {
+  /* ── shop-header ─────────────────────────────────────────
+     Ba chỉ số cạnh tên shop do HỆ THỐNG tính — seller không khai và không sửa
+     được. Ngược lại, ảnh bìa và câu giới thiệu là lời của seller, nên hai loại
+     thông tin đó tách rõ về mặt thị giác: chỉ số nằm cạnh tên, lời của seller
+     nằm trên dải bìa. */
+  .shop-header__cover {
+    @apply overflow-hidden rounded-2xl bg-gradient-to-r from-nav-dark via-[#0f172a] to-slate-900 border border-gray-800 shadow-2xl relative;
+  }
+  .shop-header__cover-inner {
+    @apply flex items-center justify-between gap-4 p-6 sm:p-10 relative z-10;
+  }
+  .shop-header__tagline-box {
+    @apply max-w-[44ch];
+  }
+  .shop-header__tagline {
+    @apply font-mono text-title-lg leading-tight text-white sm:text-2xl font-black tracking-wide;
+  }
+  .shop-header__covers {
+    @apply hidden shrink-0 gap-2 sm:flex;
+  }
+  .shop-header__cover-photo {
+    @apply relative h-[110px] w-[90px] overflow-hidden rounded-card bg-surface shadow-elev-2;
+    @apply ring-1 ring-inset ring-black/5 transition-transform duration-500;
+  }
+  .shop-header__cover-photo:hover {
+    @apply rotate-0;
+  }
+  /* Ảnh đầu và ảnh cuối nghiêng ra hai phía, ảnh giữa để thẳng — cùng một cách
+     xếp với `.hero-banner__collage`, chỉ nhỏ hơn. */
+  .shop-header__cover-photo:first-child {
+    @apply -rotate-3;
+  }
+  .shop-header__cover-photo:last-child {
+    @apply rotate-3;
+  }
+  .shop-header__cover-image {
+    @apply object-cover;
+  }
+  .shop-header__identity {
+    @apply mt-4 flex flex-wrap items-start justify-between gap-4;
+  }
+  .shop-header__who {
+    @apply flex min-w-0 items-center gap-3;
+  }
+  .shop-header__avatar {
+    @apply h-16 w-16 rounded-card ring-1 ring-line;
+  }
+  .shop-header__avatar-fallback {
+    @apply rounded-card bg-surface-2 text-title;
+  }
+  .shop-header__who-text {
+    @apply min-w-0;
+  }
+  .shop-header__name {
+    @apply flex flex-wrap items-center gap-1.5;
+  }
+  .shop-header__star-seller {
+    @apply inline-flex items-center gap-1 rounded-pill bg-star-seller-soft px-2 py-0.5;
+    @apply text-caption font-medium text-star-seller;
+  }
+  .shop-header__star-seller-icon {
+    @apply h-3 w-3 fill-current;
+  }
+  .shop-header__location {
+    @apply mt-0.5 flex items-center gap-1 text-caption text-muted;
+  }
+  .shop-header__location-icon {
+    @apply h-3 w-3;
+  }
+  .shop-header__stats {
+    @apply mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-body-sm text-muted;
+  }
+  .shop-header__stat-sep {
+    @apply text-line;
+  }
+  .shop-header__stat-value {
+    @apply tabular;
+  }
+  .shop-header__actions {
+    @apply flex flex-wrap gap-1.5;
+  }
+  .shop-header__action-icon {
+    @apply h-4 w-4;
+  }
+  .shop-header__bar {
+    @apply mt-4 flex flex-wrap items-end justify-between gap-3 border-b border-line;
+  }
+  /* Tab là LIÊN KẾT, không phải trạng thái trong bộ nhớ: `?tab=reviews` gửi
+     được cho người khác, quay lại được bằng Back, và render sẵn ở server. */
+  .shop-header__tabs {
+    @apply no-scrollbar -mb-px flex gap-4 overflow-x-auto;
+  }
+  .shop-header__tab {
+    @apply whitespace-nowrap border-b-2 border-transparent px-0.5 pb-2;
+    @apply text-title-sm font-medium text-muted outline-none transition-colors;
+  }
+  .shop-header__tab:hover {
+    @apply text-ink;
+  }
+  .shop-header__tab:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .shop-header__tab--on,
+  .shop-header__tab--on:hover {
+    @apply border-line-strong text-ink;
+  }
+  /* Tìm kiếm trong phạm vi shop là một FORM GET thật — nó phải chạy khi
+     JavaScript chưa tải xong, vì đó chính là lúc người dùng vừa mở trang. */
+  .shop-header__search {
+    @apply mb-2 w-full sm:w-[280px];
+  }
+  .shop-header__search-box {
+    @apply flex h-8 items-center gap-2 rounded-pill border border-line bg-surface px-3;
+    @apply transition-colors;
+  }
+  .shop-header__search-box:focus-within {
+    @apply border-ink;
+  }
+  .shop-header__search-icon {
+    @apply h-4 w-4 shrink-0 text-faint;
+  }
+  .shop-header__search-input {
+    @apply min-w-0 flex-1 bg-transparent text-body-sm text-ink outline-none;
+  }
+  .shop-header__search-input::placeholder {
+    @apply text-faint;
+  }
+
+  /* ── shop-sidebar · rail trái ────────────────────────────
+     Rail này TỒN TẠI trong khi trang danh mục đã bỏ rail, vì hai chỗ lọc hai
+     thứ khác nhau: trang danh mục lọc theo THUỘC TÍNH (nhiều nhóm, nhiều giá
+     trị → thuộc về một panel mở khi cần), rail này lọc theo LÁT CẮT của một
+     shop và người xem nhìn nó để hiểu shop bán gì. */
+  .shop-sidebar {
+    @apply w-full shrink-0 lg:w-[240px];
+  }
+  .shop-sidebar__title {
+    @apply mb-1 text-title-sm font-medium text-ink;
+  }
+  .shop-sidebar__group {
+    @apply mt-4 border-t border-line pt-3;
+  }
+  .shop-sidebar__actions {
+    @apply mt-4 space-y-1.5 border-t border-line pt-3;
+  }
+  .shop-sidebar__action-icon {
+    @apply h-4 w-4;
+  }
+  .shop-sidebar__stats {
+    @apply mt-4 space-y-1 border-t border-line pt-3 text-body-sm;
+  }
+  .shop-sidebar__stat {
+    @apply flex items-baseline justify-between gap-2;
+  }
+  .shop-sidebar__stat-term {
+    @apply text-muted;
+  }
+  .shop-sidebar__stat-value {
+    @apply tabular text-ink;
+  }
+  .shop-sidebar__report {
+    @apply mt-3 inline-flex items-center gap-1.5 rounded-pill py-1;
+    @apply text-caption text-muted outline-none transition-colors;
+  }
+  .shop-sidebar__report:hover {
+    @apply text-ink;
+  }
+  .shop-sidebar__report:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .shop-sidebar__report-icon {
+    @apply h-3.5 w-3.5;
+  }
+  /* Số đếm là bắt buộc: "On sale" không có số thì người dùng bấm vào rồi mới
+     biết là rỗng. */
+  .shop-slice {
+    @apply flex items-baseline justify-between gap-2 rounded-base px-1.5 py-1.5;
+    @apply text-body-sm text-muted outline-none transition-colors;
+  }
+  .shop-slice:hover {
+    @apply bg-surface-2 text-ink;
+  }
+  .shop-slice:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .shop-slice--active,
+  .shop-slice--active:hover {
+    @apply font-medium text-ink;
+  }
+  .shop-slice__count {
+    @apply tabular text-caption text-faint;
+  }
+
+  /* ── shop-reviews · tab Reviews ──────────────────────────
+     `onTimeRate` và `replyRate` đo HÀNH VI của seller chứ không đo cảm nhận của
+     người mua, nên chúng là thứ duy nhất ở trang này không bị ảnh hưởng bởi
+     việc ai chịu khó viết đánh giá hơn ai. */
+  .shop-reviews__heading {
+    @apply mb-4;
+  }
+  .shop-reviews__count {
+    @apply tabular text-muted;
+  }
+  .shop-reviews__summary {
+    @apply flex flex-wrap items-center gap-x-6 gap-y-3 rounded-lg bg-surface-2 p-4;
+  }
+  .shop-reviews__average {
+    @apply flex items-center gap-2;
+  }
+  .shop-reviews__average-value {
+    @apply tabular text-price font-medium text-ink;
+  }
+  .shop-reviews__average-note {
+    @apply text-caption text-muted;
+  }
+  .shop-reviews__metrics {
+    @apply flex flex-wrap gap-x-6 gap-y-2;
+  }
+  .shop-reviews__metric-value {
+    @apply tabular block text-title-lg font-medium text-ink;
+  }
+  .shop-reviews__metric-label {
+    @apply text-caption text-muted;
+  }
+  .shop-reviews__list {
+    @apply mt-4;
+  }
+  .shop-reviews__item {
+    @apply border-b border-line py-4 last:border-b-0;
+  }
+  .shop-reviews__item-head {
+    @apply flex flex-wrap items-center justify-between gap-2;
+  }
+  .shop-reviews__author {
+    @apply flex items-center gap-1.5;
+  }
+  .shop-reviews__avatar {
+    @apply h-5 w-5 ring-1 ring-line;
+  }
+  .shop-reviews__initials {
+    @apply text-[10px];
+  }
+  .shop-reviews__author-name {
+    @apply text-body-sm text-ink;
+  }
+  .shop-reviews__dot {
+    @apply text-caption text-faint;
+  }
+  .shop-reviews__date {
+    @apply text-caption text-muted;
+  }
+  .shop-reviews__text {
+    @apply mt-1.5 max-w-[68ch] text-body text-copy;
+  }
+  /* Mỗi dòng mang theo MÓN ĐÃ MUA: không có nó thì một đánh giá 4 sao trở nên
+     vô dụng — người đọc không biết nó nói về cái áo hay bộ icon, mà hai thứ đó
+     do hai quy trình khác nhau tạo ra. */
+  .shop-reviews__product {
+    @apply mt-2 inline-flex items-center gap-2 rounded-base p-1 outline-none transition-colors;
+  }
+  .shop-reviews__product:hover {
+    @apply bg-surface-2;
+  }
+  .shop-reviews__product:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .shop-reviews__product-media {
+    @apply relative h-9 w-9 shrink-0 overflow-hidden rounded-base bg-surface-2;
+    @apply ring-1 ring-inset ring-line;
+  }
+  .shop-reviews__product-image {
+    @apply object-cover transition-transform duration-300;
+  }
+  .shop-reviews__product:hover .shop-reviews__product-image {
+    @apply scale-110;
+  }
+  .shop-reviews__product-text {
+    @apply min-w-0;
+  }
+  .shop-reviews__product-lead {
+    @apply block text-caption text-faint;
+  }
+  .shop-reviews__product-title {
+    @apply line-clamp-1 text-caption text-ink;
+  }
+  .shop-reviews__product:hover .shop-reviews__product-title {
+    @apply underline;
+  }
+
+  /* ── shop-about · tab About ──────────────────────────────
+     Lời của seller, và CHỈ lời của seller — xen một dòng "97% giao đúng hạn"
+     vào giữa làm cả hai phần đều yếu đi. */
+  .shop-about {
+    @apply max-w-[68ch];
+  }
+  .shop-about__heading {
+    @apply mb-4;
+  }
+  .shop-about__para {
+    @apply mb-3 text-body text-copy;
+  }
+  .shop-about__owner-card {
+    @apply mt-5;
+  }
+  .shop-about__owner-title {
+    @apply text-title font-medium text-ink;
+  }
+  .shop-about__owner {
+    @apply mt-2 flex items-center gap-3;
+  }
+  .shop-about__owner-avatar {
+    @apply h-12 w-12 ring-1 ring-line;
+  }
+  .shop-about__owner-fallback {
+    @apply bg-trust;
+  }
+  .shop-about__owner-text {
+    @apply min-w-0;
+  }
+  .shop-about__owner-name {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .shop-about__owner-meta {
+    @apply flex items-center gap-1 text-caption text-muted;
+  }
+  .shop-about__owner-icon {
+    @apply h-3 w-3;
+  }
+  .shop-about__message {
+    @apply mt-3;
+  }
+  .shop-about__message-icon {
+    @apply h-4 w-4;
+  }
+
+  /* ── shop-policies · tab Shop policies ───────────────────
+     Dải nhắc "shop được phép rộng rãi hơn sàn, không được hẹp hơn" đặt ở CUỐI:
+     lên đầu thì nó biến thành lời rào trước và người ta bỏ qua phần của shop,
+     vốn mới là phần khác nhau giữa các shop. */
+  .shop-policies {
+    @apply max-w-[68ch];
+  }
+  .shop-policies__heading {
+    @apply mb-4;
+  }
+  .shop-policies__list {
+    @apply space-y-4;
+  }
+  .shop-policies__row {
+    @apply flex gap-2.5;
+  }
+  .shop-policies__icon {
+    @apply mt-0.5 h-4 w-4 shrink-0 text-ink;
+  }
+  .shop-policies__term {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .shop-policies__body {
+    @apply mt-0.5 text-body text-copy;
+  }
+  .shop-policies__floor {
+    @apply mt-5 flex gap-2 rounded-card bg-trust p-3;
+  }
+  .shop-policies__floor-text {
+    @apply text-body-sm text-copy;
+  }
+  .shop-policies__floor-lead {
+    @apply font-medium text-ink;
+  }
+  .shop-policies__floor-link {
+    @apply text-action;
+  }
+  .shop-policies__floor-link:hover {
+    @apply underline;
+  }
+}

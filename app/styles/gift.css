@@ -1,0 +1,135 @@
+/* ============================================================
+   BEM · thẻ quà tặng
+   Nạp từ app/globals.css (entry duy nhất).
+   ============================================================ */
+
+@layer components {
+  /* ── gift-amounts · chọn mệnh giá ────────────────────────
+     Lưới nút thay vì `<select>`, và đây là ngoại lệ có lý do của quy tắc "mọi
+     trục là `<select>`" ở hộp mua: mệnh giá là **sáu lựa chọn cố định, ngắn, và
+     cần so sánh cạnh nhau**. Người tặng đang cân nhắc "25 hay 50", và một danh
+     sách đóng buộc họ mở ra mới thấy hết. Trục biến thể sản phẩm thì khác — nó
+     có thể có ba mươi giá trị và mỗi danh mục một kiểu. */
+  .gift-amounts {
+    @apply grid grid-cols-3 gap-2;
+  }
+  .gift-amounts__option {
+    @apply relative cursor-pointer rounded-card border border-line bg-surface py-3 text-center;
+    @apply text-title font-medium text-ink transition-colors;
+  }
+  .gift-amounts__option:hover {
+    @apply border-ink;
+  }
+  .gift-amounts__option:has(:checked) {
+    @apply border-ink bg-trust ring-1 ring-ink;
+  }
+  .gift-amounts__option:has(:focus-visible) {
+    @apply ring-2 ring-ink;
+  }
+  /* Ô radio thật vẫn nằm trong DOM, chỉ giấu khỏi mắt — bỏ nó đi là mất phím
+     mũi tên, mất gộp nhóm theo `name`, và trình đọc màn hình không còn biết đây
+     là một nhóm chọn một. */
+  .gift-amounts__input {
+    @apply absolute h-px w-px opacity-0;
+  }
+
+  /* ── gift-preview · xem trước tấm thẻ ────────────────────
+     Người tặng cần thấy thứ người nhận sẽ thấy trước khi trả tiền. Không có ô
+     xem trước thì lời nhắn là một cú đánh cược, và lỗi chính tả trong một món
+     quà thì không sửa lại được. */
+  .gift-preview {
+    @apply overflow-hidden rounded-card border border-line bg-trust p-4;
+  }
+  .gift-preview__brand {
+    @apply text-caption font-medium uppercase tracking-wide text-muted;
+  }
+  .gift-preview__value {
+    @apply mt-1 font-serif text-heading leading-tight text-ink;
+  }
+  .gift-preview__note {
+    @apply mt-2 whitespace-pre-line text-body-sm text-copy;
+  }
+  .gift-preview__from {
+    @apply mt-3 border-t border-line pt-2 text-caption text-muted;
+  }
+
+  /* ── gift-redeem · ô nhập mã ở bước thanh toán ───────────
+     Mã viết HOA và giãn chữ: người dùng chép từ email hoặc đọc từ tấm thẻ giấy,
+     và `tabular` giữ các nhóm bốn ký tự thẳng cột nên dò lại bằng mắt nhanh hơn. */
+  .gift-redeem {
+    @apply flex flex-wrap items-end gap-2;
+  }
+  .gift-redeem__field {
+    @apply min-w-[200px] flex-1;
+  }
+  .gift-redeem__input {
+    @apply tabular uppercase tracking-wide;
+  }
+
+  /* ── gift-card-form · mua thẻ quà tặng ───────────────────
+     Xem trước nằm CẠNH biểu mẫu, không nằm sau một cái nút: người tặng đang
+     viết lời nhắn cho người thật, và lỗi chính tả trong một món quà thì không
+     sửa lại được sau khi gửi. */
+  .gift-card-form {
+    @apply grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start;
+  }
+  .gift-card-form__legend {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .gift-card-form__legend--spaced {
+    @apply mb-2;
+  }
+  .gift-card-form__amounts {
+    @apply mt-2;
+  }
+  .gift-card-form__note {
+    @apply mt-1.5 text-caption text-muted;
+  }
+  .gift-card-form__card {
+    @apply mt-3;
+  }
+  .gift-card-form__deliveries {
+    @apply space-y-2;
+  }
+  .gift-card-form__delivery-label {
+    @apply flex items-center gap-1.5;
+  }
+  .gift-card-form__delivery-icon {
+    @apply h-4 w-4;
+  }
+  .gift-card-form__recipient {
+    @apply mt-3 grid gap-x-3 md:grid-cols-2;
+  }
+  .gift-card-form__message {
+    @apply mt-3;
+  }
+  .gift-card-form__optional {
+    @apply font-normal text-faint;
+  }
+  .gift-card-form__count {
+    @apply tabular mt-0.5 text-caption text-faint;
+  }
+  /* `top-20` = 120px: cao hơn header 68px một khoảng thở, và tấm thẻ xem trước
+     cao hơn bảng tổng tiền nên cần lùi thêm so với `.order-summary`. */
+  .gift-card-form__aside {
+    @apply lg:sticky lg:top-20;
+  }
+  .gift-card-form__total {
+    @apply mt-3 flex items-baseline justify-between gap-2;
+  }
+  .gift-card-form__total-label {
+    @apply text-title-sm text-muted;
+  }
+  .gift-card-form__total-note {
+    @apply mt-0.5 text-caption text-muted;
+  }
+  .gift-card-form__submit {
+    @apply mt-3;
+  }
+  .gift-card-form__added {
+    @apply mt-2;
+  }
+  .gift-preview__icon {
+    @apply mr-1 inline h-3.5 w-3.5;
+  }
+}

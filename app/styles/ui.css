@@ -1,0 +1,431 @@
+/* ============================================================
+   BEM · primitive trong `components/ui/`
+   ============================================================
+
+   Quy ước: block__element--modifier.
+
+   Thân class viết bằng `@apply` nên vốn từ vẫn là Tailwind và token vẫn là
+   `@theme` — đổi `--color-btn` một chỗ thì mọi nút đổi theo. Chỗ nào Tailwind
+   diễn đạt vụng (bộ chọn con, `::after`, `:has`) thì viết CSS thật, trộn chung
+   trong cùng một block.
+
+   Tệp này được `@import` từ `app/globals.css` nên nó nằm CÙNG một lượt biên dịch
+   Tailwind — nhờ vậy `@apply` thấy được `@theme` và KHÔNG cần `@reference`.
+   ============================================================ */
+
+@layer components {
+  /* ── btn ────────────────────────────────────────────────
+     Biến thể lấy từ `.wt-btn--*` trong CSS sản xuất của Etsy
+     (document/05-nghien-cuu-doi-thu/etsy-product-page.md §1).
+
+     Nền nút KHÔNG phải cam: chữ trắng trên `#f1641e` chỉ đạt 3.19:1, dưới ngưỡng
+     4.5:1 của WCAG AA — Etsy cũng không dùng.
+
+     Thang chiều cao: sm 42px · base 54px (`--spacing` = 6px). Thấp hơn mức của
+     ui-design.md §A1 một bậc vì giao diện này dày điều khiển xếp dọc. */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap;
+    @apply rounded-pill font-medium outline-none select-none transition-colors;
+  }
+  .btn:focus-visible {
+    @apply ring-2 ring-ink ring-offset-2;
+  }
+  .btn:disabled {
+    @apply pointer-events-none opacity-40;
+  }
+  /* Bộ chọn con thay cho `[&_svg]:` — cùng kết quả, đọc ra là CSS */
+  .btn svg {
+    @apply pointer-events-none shrink-0;
+  }
+
+  .btn--filled {
+    @apply bg-btn text-on-dark hover:bg-btn-hover active:bg-btn-active;
+  }
+  .btn--outline {
+    @apply border-[1.5px] border-line-strong bg-transparent text-ink;
+    @apply hover:bg-ink/5 active:bg-ink/10;
+  }
+  .btn--ghost {
+    @apply bg-transparent text-ink hover:bg-ink/5;
+  }
+
+  .btn--base {
+    @apply min-h-9 px-2.5 py-1 text-title-sm;
+  }
+  .btn--sm {
+    @apply min-h-7 px-2 py-0.5 text-body-sm;
+  }
+  .btn--icon {
+    @apply h-9 w-9 p-1.5;
+  }
+  .btn--icon-sm {
+    @apply h-7 w-7 p-1;
+  }
+  .btn--block {
+    @apply w-full;
+  }
+
+  /* ── card ───────────────────────────────────────────────
+     Bo 8px thay vì 12px của Collage: thẻ ở đây dày chữ hơn thẻ sản phẩm của
+     Etsy, góc bo lớn ăn mất khoảng đệm ở góc.
+
+     `--interactive` CHỈ dùng cho thẻ thật sự bấm được. Thẻ tĩnh mà nhích lên khi
+     rê chuột là một lời hứa suông. */
+  .card {
+    @apply rounded-card border border-line bg-surface;
+  }
+  .card--quiet {
+    @apply border-transparent bg-surface-2;
+  }
+  .card--trust {
+    @apply border-transparent bg-trust;
+  }
+  .card--selected {
+    @apply border-ink ring-1 ring-ink;
+  }
+  .card--interactive {
+    @apply transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-elev-2;
+  }
+  .card__body {
+    @apply p-3;
+  }
+  .card__title {
+    @apply text-title font-medium text-ink;
+  }
+
+  /* ── field · nền chung của input · select · textarea ─────
+     Ba ô nhập phải cao và cỡ chữ giống nhau, nếu không form trông như ghép từ
+     hai hệ. Trước đây điều đó được giữ bằng cách chép cùng một chuỗi utility ba
+     lần; giờ là một block, ba block kia kế thừa.
+
+     Cỡ chữ 13px chứ không 16px: nút dùng 13px, nhãn 13px — một ô 16px đứng cạnh
+     nút 13px luôn trông quá khổ, và cảm giác "form bị phóng to" đến từ đó chứ
+     không từ chiều cao. Chuyện iOS phóng to trang khi chữ dưới 16px xử lý MỘT
+     lần ở `globals.css` bằng `@media (pointer: coarse)`. */
+  .field-base {
+    @apply w-full rounded-base border border-line bg-surface;
+    @apply text-ink outline-none transition-colors;
+  }
+  .field-base:hover {
+    @apply border-ink;
+  }
+  .field-base:focus {
+    @apply border-ink ring-1 ring-ink;
+  }
+  .field-base:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+  /* Chỉ đổi VIỀN khi sai. Không có trạng thái "viền xanh khi đúng": form 8 ô mà
+     ô nào cũng xanh thì màn hình thành cây thông và lỗi thật chìm đi. */
+  .field-base--invalid,
+  .field-base--invalid:hover {
+    @apply border-critical ring-1 ring-critical;
+  }
+
+  /* ── input ──────────────────────────────────────────────── */
+  .input {
+    @apply min-h-7 px-2 py-0.5 text-body-sm;
+  }
+  .input::placeholder {
+    @apply text-faint;
+  }
+  .input:disabled {
+    @apply bg-surface-2 text-faint;
+  }
+
+  /* ── textarea ───────────────────────────────────────────
+     Ngoại lệ duy nhất giữ 16px: đây là chỗ người ta VIẾT nhiều dòng — đánh giá
+     sản phẩm, mô tả yêu cầu đổi trả — và 13px với dấu tiếng Việt chồng thì mỏi
+     mắt. Ô một dòng không có vấn đề đó. */
+  .textarea {
+    @apply flex min-h-14 px-2 py-1.5 text-body;
+  }
+  .textarea::placeholder {
+    @apply text-faint;
+  }
+
+  /* ── select ─────────────────────────────────────────────
+     Bề rộng đặt lên LỚP BỌC chứ không lên `<select>`: mũi tên định vị tuyệt đối
+     theo lớp bọc, để lớp bọc rộng hết dòng thì mũi tên trôi ra xa khỏi ô chọn. */
+  .select {
+    @apply relative;
+  }
+  .select__field {
+    @apply min-h-7 appearance-none py-0.5 pl-2 pr-6 text-body-sm;
+  }
+  .select__chevron {
+    @apply pointer-events-none absolute right-1.5 top-1/2 h-3 w-3 -translate-y-1/2 opacity-60;
+  }
+
+  /* ── label ──────────────────────────────────────────────
+     `max-w-[600px]` lấy đúng `dimension-app-input-label-max-width` của Collage.
+     Nhãn dài hết chiều ngang màn 1400px khiến mắt phải quét ngang quá xa rồi
+     quay về đầu dòng — chậm hơn hẳn khi điền form dài. */
+  .label {
+    @apply mb-1 block max-w-[600px] text-title-sm font-medium text-ink;
+  }
+
+  /* ── badge ──────────────────────────────────────────────
+     Ba tông `kind-*` là thứ Etsy KHÔNG có: họ chỉ bán một loại hàng. Hệ POD phải
+     nói rõ hàng in sau khi đặt, nếu không thời gian chờ sẽ thành khiếu nại; và
+     file thiết kế bắt buộc gắn nhãn vì mua nhầm là ngồi đợi một kiện hàng không
+     bao giờ tới. */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-pill px-2 py-0.5;
+    @apply text-body-sm font-medium leading-none whitespace-nowrap;
+  }
+  .badge--neutral {
+    @apply bg-surface-3 text-muted;
+  }
+  .badge--trust {
+    @apply bg-trust text-ink;
+  }
+  .badge--stock {
+    @apply bg-kind-stock-bg text-kind-stock;
+  }
+  .badge--pod {
+    @apply bg-kind-pod-bg text-kind-pod;
+  }
+  .badge--file {
+    @apply bg-kind-file-bg text-kind-file;
+  }
+
+  /* ── separator ──────────────────────────────────────────── */
+  .separator {
+    @apply shrink-0 bg-line;
+  }
+  .separator--horizontal {
+    @apply h-px w-full;
+  }
+  .separator--vertical {
+    @apply h-full w-px;
+  }
+
+  /* ── skeleton ───────────────────────────────────────────
+     Khung xương phải có ĐÚNG kích thước của nội dung thật, nếu không lúc dữ liệu
+     về trang sẽ nhảy và người dùng bấm nhầm — nên `.skeleton-grid` lặp lại đúng
+     số cột và khe của `.product-grid`. */
+  /* `@apply` chỉ nhận utility của Tailwind, KHÔNG nhận class BEM của mình — nên
+     phần dùng chung gom vào một danh sách bộ chọn thay vì `@apply skeleton`.
+     Đây là cách CSS thuần vốn làm việc này, và nó giữ JSX ở đúng một class. */
+  .skeleton,
+  .skeleton-grid__media,
+  .skeleton-grid__title,
+  .skeleton-grid__meta,
+  .skeleton-grid__price {
+    @apply animate-pulse rounded-base bg-surface-3;
+  }
+  .skeleton-grid {
+    @apply grid grid-cols-2 gap-4 lg:grid-cols-4;
+  }
+  .skeleton-grid__media {
+    @apply aspect-square w-full rounded-card;
+  }
+  .skeleton-grid__title {
+    @apply mt-1.5 h-3 w-4/5;
+  }
+  .skeleton-grid__meta {
+    @apply mt-1 h-3 w-1/2;
+  }
+  .skeleton-grid__price {
+    @apply mt-1.5 h-4 w-1/3;
+  }
+
+  /* ── progress ───────────────────────────────────────────── */
+  .progress {
+    @apply relative h-1.5 w-full overflow-hidden rounded-pill bg-surface-3;
+  }
+  .progress__bar {
+    @apply h-full rounded-pill bg-ink transition-transform duration-300;
+  }
+
+  /* ── avatar ─────────────────────────────────────────────── */
+  .avatar {
+    @apply relative flex h-12 w-12 shrink-0 overflow-hidden rounded-full bg-surface-3;
+  }
+  .avatar__image {
+    @apply aspect-square h-full w-full;
+  }
+  .avatar__fallback {
+    @apply flex h-full w-full items-center justify-center;
+    @apply bg-surface-3 text-title font-medium text-muted;
+  }
+
+  /* ── checkbox ───────────────────────────────────────────
+     `accent-color` là cách rẻ nhất để đổi màu ô chọn mà vẫn giữ nguyên hành vi
+     gốc — thay vì ẩn input rồi vẽ lại bằng `<span>`, cách làm luôn kéo theo một
+     loạt lỗi bàn phím. */
+  .checkbox {
+    @apply h-3.5 w-3.5 shrink-0 cursor-pointer rounded-[3px] border-line;
+    @apply accent-[var(--color-btn)] outline-none;
+  }
+  .checkbox:focus-visible {
+    @apply ring-2 ring-ink ring-offset-2;
+  }
+  .checkbox:disabled {
+    @apply cursor-not-allowed opacity-40;
+  }
+  /* Vùng chạm là cả dòng, không chỉ ô vuông 21px */
+  .checkbox-field {
+    @apply flex cursor-pointer items-start gap-1.5 py-0.5;
+  }
+  .checkbox-field__box {
+    @apply mt-1;
+  }
+  .checkbox-field__label {
+    @apply text-body-sm text-ink;
+  }
+  .checkbox-field__hint {
+    @apply block text-caption text-faint;
+  }
+
+  /* ── tabs ───────────────────────────────────────────────
+     Gạch chân, không phải viên thuốc màu. Ở trang tài khoản tab là ĐIỀU HƯỚNG
+     chứ không phải bộ lọc; Etsy phân biệt hai thứ này rất rõ, và dùng lẫn thì
+     người dùng không đoán được bấm vào có mất dữ liệu đang gõ hay không. */
+  .tabs {
+    @apply no-scrollbar flex gap-3 overflow-x-auto border-b border-line;
+  }
+  .tabs__tab {
+    @apply relative -mb-px whitespace-nowrap border-b-2 border-transparent px-0.5 py-2;
+    @apply text-title-sm font-medium text-muted outline-none transition-colors;
+  }
+  .tabs__tab:hover {
+    @apply text-ink;
+  }
+  .tabs__tab:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .tabs__tab--on {
+    @apply border-line-strong text-ink;
+  }
+  .tabs__count {
+    @apply tabular ml-1 text-caption text-faint;
+  }
+
+  /* ── radio-card ─────────────────────────────────────────
+     Là THẺ chứ không phải hàng radio gọn, vì mỗi lựa chọn phải mang theo một
+     dòng mô tả — "COD" áp dụng cho kiện nào, giao nhanh khác giao thường ra sao.
+     Ô radio thật vẫn nằm trong DOM (không `display:none`) nên phím mũi tên,
+     gộp nhóm theo `name` và đọc màn hình đều chạy như radio chuẩn. */
+  .radio-card {
+    @apply flex cursor-pointer gap-2 rounded-card border border-line p-3 transition-colors;
+  }
+  .radio-card:hover {
+    @apply border-ink;
+  }
+  .radio-card:has(:checked) {
+    @apply border-ink ring-1 ring-ink;
+  }
+  .radio-card:has(:disabled) {
+    @apply cursor-not-allowed opacity-45;
+  }
+  .radio-card:has(:disabled):hover {
+    @apply border-line;
+  }
+  .radio-card__input {
+    @apply mt-0.5 h-3 w-3 shrink-0 cursor-pointer accent-[var(--color-btn)] outline-none;
+  }
+  .radio-card__input:focus-visible {
+    @apply ring-2 ring-ink ring-offset-2;
+  }
+  .radio-card__body {
+    @apply min-w-0 flex-1;
+  }
+  .radio-card__head {
+    @apply flex flex-wrap items-baseline justify-between gap-x-2;
+  }
+  .radio-card__label {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .radio-card__aside {
+    @apply shrink-0;
+  }
+  .radio-card__description {
+    @apply mt-0.5 block text-caption text-muted;
+  }
+
+  /* ── accordion ──────────────────────────────────────────
+     Radix chỉ lo hành vi (`aria-expanded`, bàn phím, biến chiều cao); toàn bộ
+     diện mạo nằm ở đây. Mũi tên xoay qua bộ chọn `[data-state=open]` — Radix
+     đặt thuộc tính đó lên nút, nên CSS thật đọc rõ hơn biến thể
+     `[&[data-state=open]>svg]:` từng viết trong JSX. */
+  .accordion__item {
+    @apply border-b border-line;
+  }
+  .accordion__header {
+    @apply flex;
+  }
+  .accordion__trigger {
+    @apply flex flex-1 items-center justify-between gap-3 py-3 text-left;
+    @apply text-title font-medium outline-none transition-colors;
+  }
+  .accordion__trigger:hover {
+    @apply text-muted;
+  }
+  .accordion__trigger:focus-visible {
+    @apply ring-2 ring-ink ring-offset-2;
+  }
+  .accordion__chevron {
+    @apply h-4 w-4 shrink-0 transition-transform duration-200;
+  }
+  .accordion__trigger[data-state='open'] .accordion__chevron {
+    @apply rotate-180;
+  }
+  .accordion__panel {
+    @apply overflow-hidden text-body;
+  }
+  .accordion__panel[data-state='open'] {
+    @apply animate-accordion-down;
+  }
+  .accordion__panel[data-state='closed'] {
+    @apply animate-accordion-up;
+  }
+  .accordion__body {
+    @apply pb-4 pt-0;
+  }
+
+  /* ── sheet · lớp phủ trượt vào ───────────────────────────
+     Hai hướng cho hai việc: `--left` là panel lọc cao hết màn hình, `--bottom`
+     là ngăn kéo ngắn trên điện thoại.
+
+     Chân panel nằm NGOÀI vùng cuộn và luôn dính đáy — panel lọc dài hơn hai màn
+     hình, nút Apply cuộn theo nội dung thì phần lớn người dùng sẽ đóng bằng X
+     thay vì tìm nó. */
+  .sheet__overlay {
+    @apply fixed inset-0 z-40 bg-black/40;
+  }
+  .sheet__panel {
+    @apply fixed z-50 flex flex-col bg-surface shadow-elev-4;
+  }
+  .sheet__panel--left {
+    @apply inset-y-0 left-0 w-[min(92vw,420px)];
+  }
+  .sheet__panel--bottom {
+    @apply inset-x-0 bottom-0 max-h-[85dvh] rounded-t-[16px];
+  }
+  .sheet__head {
+    @apply flex items-center justify-between gap-2 border-b border-line px-3 py-2;
+  }
+  .sheet__title {
+    @apply font-serif text-title-lg text-ink;
+  }
+  .sheet__close {
+    @apply rounded-pill p-1 text-muted outline-none transition-colors;
+  }
+  .sheet__close:hover {
+    @apply bg-surface-2 text-ink;
+  }
+  .sheet__close:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .sheet__close-icon {
+    @apply h-4 w-4;
+  }
+  .sheet__body {
+    @apply no-scrollbar min-h-0 flex-1 overflow-y-auto px-3 py-3;
+  }
+  .sheet__foot {
+    @apply border-t border-line bg-surface p-3;
+  }
+}

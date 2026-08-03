@@ -1,0 +1,878 @@
+/* ============================================================
+   BEM · giỏ hàng, thẻ sản phẩm, lưới, bộ lọc, checkout
+   Nạp từ app/globals.css (entry duy nhất).
+   ============================================================ */
+
+@layer components {
+  /* ── product-grid ────────────────────────────────────────
+     **2 cột, lên 4 cột tại 900px.** Không có bậc nào khác — đây là nguyên văn
+     luật của Etsy (`wt-grid__item-xs-6` + `wt-grid__item-lg-3` trên lưới 12
+     cột), không phải suy đoán. Đáng chú ý là thứ KHÔNG có: không bậc 3 cột ở
+     khoảng giữa, không bậc 5 cột ở màn rộng.
+
+     `.skeleton-grid` trong `ui.css` phải lặp lại đúng số cột và khe này, nếu
+     không lúc dữ liệu về trang sẽ nhảy. */
+  .product-grid {
+    @apply grid grid-cols-2 gap-4 lg:grid-cols-4;
+  }
+
+  /* ── product-card ────────────────────────────────────────
+     Thứ tự thông tin: ảnh → tên → **tín nhiệm → giá** → shop → thời gian giao.
+     Giá đứng SAU đánh giá vì trên sàn nhiều người bán, câu hỏi đầu tiên là "có
+     đáng tin không", không phải "bao nhiêu tiền".
+
+     Trạng thái rê chuột đi qua bộ chọn con thay vì `group-hover:` để JSX giữ
+     đúng một class mỗi thẻ. */
+  .product-card {
+    @apply relative rounded-card transition-transform duration-200;
+  }
+  .product-card:hover {
+    @apply -translate-y-0.5;
+  }
+  .product-card__media {
+    @apply ratio-listing relative overflow-hidden rounded-card border border-line bg-surface-2;
+    @apply transition-shadow duration-200;
+  }
+  .product-card:hover .product-card__media {
+    @apply shadow-elev-2;
+  }
+  .product-card__image {
+    @apply object-cover transition-transform duration-500 ease-out;
+  }
+  .product-card:hover .product-card__image {
+    @apply scale-[1.06];
+  }
+  /* Ảnh động hiện đè lên ảnh tĩnh khi rê chuột. Làm bằng CSS chứ không bằng
+     `useState`, để `ProductCard` vẫn là Server Component: một lưới hai chục thẻ
+     mà mỗi thẻ mang trạng thái hover là hai chục lần hydrate cho một hiệu ứng
+     thị giác. Người bật "giảm chuyển động" không bao giờ thấy nó. */
+  .product-card__motion {
+    @apply object-cover opacity-0 transition-opacity duration-200 motion-reduce:hidden;
+  }
+  .product-card:hover .product-card__motion {
+    @apply opacity-100;
+  }
+  /* Lớp phủ tối rất nhẹ khi rê chuột — không để trang trí: nó làm nhãn trắng ở
+     góc ảnh đọc được trên ảnh sáng, và cho biết cả thẻ bấm được. */
+  .product-card__veil {
+    @apply pointer-events-none absolute inset-0 bg-ink/0 transition-colors duration-200;
+  }
+  .product-card:hover .product-card__veil {
+    @apply bg-ink/[0.06];
+  }
+  .product-card__kind {
+    @apply absolute left-1 top-1;
+  }
+  .product-card__video {
+    @apply absolute bottom-1 left-1 h-5 w-5;
+  }
+  .product-card:hover .product-card__video {
+    @apply opacity-0;
+  }
+  /* Nút yêu thích nằm NGOÀI liên kết bao thẻ — lồng `<button>` trong `<a>` là
+     HTML không hợp lệ và trên Safari nó nuốt luôn cú bấm vào tim.
+     Trên cảm ứng không có `hover`, nên dưới 480px nút hiện thường trực. */
+  .product-card__fav {
+    @apply absolute right-1 top-1 z-10 grid h-7 w-7 place-items-center rounded-pill;
+    @apply bg-surface/90 text-ink opacity-0 shadow-elev-1 outline-none;
+    @apply transition-all duration-200 max-sm:opacity-100;
+  }
+  .product-card__fav:hover {
+    @apply scale-110 bg-surface;
+  }
+  .product-card__fav:focus-visible {
+    @apply opacity-100 ring-2 ring-ink;
+  }
+  .product-card:hover .product-card__fav {
+    @apply opacity-100;
+  }
+  .product-card__fav-icon {
+    @apply h-3.5 w-3.5;
+  }
+  .product-card__body {
+    @apply pt-1.5;
+  }
+  .product-card__title {
+    @apply text-title-sm leading-snug text-ink;
+  }
+  /* `::after` trải kín thẻ để cả thẻ bấm được mà DOM vẫn chỉ có một liên kết */
+  .product-card__link {
+    @apply line-clamp-2 outline-none transition-colors;
+  }
+  .product-card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .product-card:hover .product-card__link {
+    @apply underline;
+  }
+  .product-card__link:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .product-card__trust {
+    @apply mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5;
+  }
+  .product-card__bestseller {
+    @apply text-caption;
+  }
+  .product-card__prices {
+    @apply mt-0.5 flex flex-wrap items-baseline gap-1.5;
+  }
+  .product-card__off {
+    @apply text-caption font-medium text-money;
+  }
+  .product-card__shop {
+    @apply mt-0.5 truncate text-caption text-faint;
+  }
+  .product-card__star-seller {
+    @apply ml-1 text-star-seller;
+  }
+  .product-card__delivery {
+    @apply mt-0.5 text-caption text-muted;
+  }
+  .product-card__free {
+    @apply text-money;
+  }
+
+  /* Amazon Badges & Card Modifiers */
+  .shelf-card__badge-bestseller {
+    @apply absolute top-1.5 left-1.5 bg-[#e67a00] text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded shadow-xs uppercase tracking-tight;
+  }
+  .shelf-card__rating {
+    @apply mt-1 flex items-center gap-1;
+  }
+  .shelf-card__price-current {
+    @apply text-base font-extrabold text-amazon-red;
+  }
+  .shelf-card__deal-badge {
+    @apply inline-block bg-amazon-red text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded mt-1 uppercase;
+  }
+  .shelf-card__prime-row {
+    @apply mt-1 flex items-center gap-1 text-[11px];
+  }
+  .shelf-card__prime-logo {
+    @apply font-extrabold text-amazon-link italic text-xs;
+  }
+
+  /* ── cart · giỏ hàng nhóm theo shop ──────────────────────
+     Giỏ bắt buộc nhóm theo shop vì mỗi shop là một đơn con, một kiện, một dòng
+     đối soát riêng. Hậu quả của danh sách phẳng không lộ ra ở màn giỏ — nó lộ
+     ra ba ngày sau khi buyer nhận kiện đầu tiên và nghĩ mình bị giao thiếu. */
+  .cart {
+    @apply grid gap-4 lg:grid-cols-[1fr_340px] lg:items-start;
+  }
+  .cart__groups {
+    @apply space-y-3;
+  }
+  .cart__shop {
+    @apply flex items-center gap-2 border-b border-line px-3 py-2;
+  }
+  .cart__shop-icon {
+    @apply h-4 w-4 text-muted;
+  }
+  .cart__shop-link {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .cart__shop-link:hover {
+    @apply underline;
+  }
+  .cart__item {
+    @apply flex gap-2 border-b border-line p-3 transition-colors last:border-b-0;
+  }
+  .cart__item:hover {
+    @apply bg-surface-2;
+  }
+  .cart__check {
+    @apply mt-1;
+  }
+  .cart__thumb {
+    @apply relative h-16 w-16 shrink-0 overflow-hidden rounded-base border border-line bg-surface-2;
+  }
+  .cart__body {
+    @apply min-w-0 flex-1;
+  }
+  .cart__title {
+    @apply line-clamp-2 text-title-sm text-ink;
+  }
+  .cart__title:hover {
+    @apply underline;
+  }
+  .cart__variant {
+    @apply mt-0.5 text-caption text-muted;
+  }
+  .cart__personalisation {
+    @apply text-caption text-muted;
+  }
+  .cart__meta {
+    @apply mt-1 flex flex-wrap items-center gap-1.5;
+  }
+  .cart__eta {
+    @apply text-caption text-muted;
+  }
+  .cart__actions {
+    @apply mt-1.5 flex items-center gap-2;
+  }
+  .cart__remove-icon {
+    @apply h-3.5 w-3.5;
+  }
+  .cart__amount {
+    @apply shrink-0 text-right;
+  }
+  .cart__each {
+    @apply mt-0.5 text-caption text-faint;
+  }
+  .cart__foot {
+    @apply flex flex-wrap items-baseline justify-between gap-1 px-3 py-2 text-body-sm text-muted;
+  }
+  .cart__free {
+    @apply font-medium text-money;
+  }
+  .cart__empty-icon {
+    @apply h-8 w-8;
+  }
+
+  /* ── checkout-grid · bố cục chung cho ba bước checkout ───
+     Cột phải hẹp hơn giỏ hàng (300px thay vì 340px): ở checkout nó chỉ chở bảng
+     tổng tiền, không chở thao tác nào. */
+  .checkout-grid {
+    @apply grid gap-4 lg:grid-cols-[1fr_300px] lg:items-start;
+  }
+
+  /* ── address-picker ──────────────────────────────────────── */
+  .address-picker {
+    @apply space-y-2;
+  }
+  .address-picker__label {
+    @apply flex flex-wrap items-center gap-1.5;
+  }
+  .address-picker__phone {
+    @apply font-normal text-muted;
+  }
+  /* Viền đứt: nó là chỗ THÊM một mục, không phải một địa chỉ đã có */
+  .address-picker__add {
+    @apply flex w-full items-center justify-center gap-1.5 rounded-card;
+    @apply border border-dashed border-line py-3;
+    @apply text-title-sm font-medium text-ink outline-none transition-colors;
+  }
+  .address-picker__add:hover {
+    @apply border-ink;
+  }
+  .address-picker__add:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .address-picker__add-icon {
+    @apply h-4 w-4;
+  }
+  /* Hai cột từ 640px, nhưng địa chỉ dòng 1 và 2 chiếm cả hàng: một ô địa chỉ
+     rộng nửa hàng buộc người dùng cuộn ngang trong chính ô nhập. */
+  .address-form__grid {
+    @apply grid gap-x-3 md:grid-cols-2;
+  }
+  .address-form__wide {
+    @apply md:col-span-2;
+  }
+  /* Dải nhắc đứng SAU biểu mẫu ở nhánh khách vãng lai (mời tạo tài khoản sau
+     khi đã điền), nhưng đứng TRƯỚC ở nhánh hàng số (nói không cần địa chỉ trước
+     khi người dùng đi tìm ô nhập) — nên hai chiều lề, không phải một. */
+  .address-form__notice {
+    @apply mt-2;
+  }
+  .address-form__notice--lead {
+    @apply mb-2;
+  }
+
+  /* ── basket-nudge · phần còn thiếu của khối trong layout.css ── */
+  .basket-nudge__icon-glyph,
+  .basket-nudge__close-icon {
+    @apply h-4 w-4;
+  }
+  .basket-nudge__text {
+    @apply min-w-0 flex-1;
+  }
+  .basket-nudge__image {
+    @apply object-cover;
+  }
+
+  /* ── browse-layout ───────────────────────────────────────── */
+  .browse-layout__toolbar,
+  .browse-layout__results {
+    @apply mt-4;
+  }
+  /* Giữ đúng chiều cao thanh công cụ trong lúc `<Suspense>` chờ, nếu không lưới
+     bên dưới nhảy lên rồi tụt xuống khi toolbar hiện ra. */
+  .browse-layout__toolbar-fallback {
+    @apply h-10;
+  }
+  .browse-layout__empty-icon {
+    @apply h-8 w-8;
+  }
+
+  /* ── category-tiles · dải thẻ danh mục con ───────────────
+     Hiện sáu thẻ rồi mới "Show more (N)". Một dải cuộn ngang trông gọn hơn
+     nhưng thẻ thứ bảy trở đi gần như không ai thấy — nội dung bị cắt ở mép phải
+     không phát tín hiệu gì rằng còn nữa, trong khi một cái nút thì có. */
+  .category-tiles__list {
+    @apply flex flex-wrap justify-center gap-x-4 gap-y-3;
+  }
+  .category-tiles__item {
+    @apply w-[112px] sm:w-[124px];
+  }
+  .category-tiles__card {
+    @apply block outline-none;
+  }
+  .category-tiles__card:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .category-tiles__media {
+    @apply relative aspect-square overflow-hidden rounded-card bg-surface-2;
+    @apply ring-1 ring-inset ring-line transition-shadow duration-200;
+  }
+  .category-tiles__card:hover .category-tiles__media {
+    @apply shadow-elev-2;
+  }
+  .category-tiles__image {
+    @apply object-cover transition-transform duration-300;
+  }
+  .category-tiles__card:hover .category-tiles__image {
+    @apply scale-105;
+  }
+  .category-tiles__caption {
+    @apply mt-1 text-center text-title-sm text-ink;
+  }
+  .category-tiles__card:hover .category-tiles__caption {
+    @apply underline;
+  }
+  .category-tiles__more {
+    @apply mt-3 flex justify-center;
+  }
+
+  /* ── delivery-step ───────────────────────────────────────── */
+  .delivery-step__title {
+    @apply mb-3;
+  }
+  .delivery-step__who {
+    @apply mb-3 flex flex-wrap items-center justify-between gap-2;
+    @apply rounded-card bg-surface-2 px-3 py-2;
+  }
+  .delivery-step__who-text {
+    @apply flex items-center gap-1.5 text-body-sm text-ink;
+  }
+  .delivery-step__who-name {
+    @apply font-medium;
+  }
+  .delivery-step__who-icon {
+    @apply h-4 w-4 text-muted;
+  }
+  .delivery-step__who-icon--signed-in {
+    @apply text-money;
+  }
+  .delivery-step__actions {
+    @apply mt-3 flex flex-wrap gap-2;
+  }
+
+  /* ── download-card · thẻ tải file ────────────────────────
+     Thanh tiến độ ĐI NGƯỢC: đầy nghĩa là sắp hết lượt tải, nên nó chuyển sang
+     đỏ ở mức cạn thay vì xanh ở mức đầy. */
+  .download-card__row {
+    @apply flex gap-3 p-3;
+  }
+  .download-card__thumb {
+    @apply relative h-20 w-20 shrink-0 overflow-hidden rounded-base border border-line bg-surface-2;
+  }
+  .download-card__image {
+    @apply object-cover;
+  }
+  .download-card__body {
+    @apply min-w-0 flex-1;
+  }
+  .download-card__title {
+    @apply text-title font-medium text-ink;
+  }
+  .download-card__bought {
+    @apply mt-0.5 text-caption text-muted;
+  }
+  .download-card__contents {
+    @apply mt-1 text-body-sm text-ink;
+  }
+  .download-card__size {
+    @apply text-muted;
+  }
+  .download-card__quota {
+    @apply mt-1.5 flex items-center gap-2;
+  }
+  .download-card__meter {
+    @apply h-1 w-28 overflow-hidden rounded-pill bg-surface-3;
+  }
+  .download-card__meter-bar {
+    @apply h-full bg-ink;
+  }
+  .download-card__meter-bar--exhausted {
+    @apply bg-critical;
+  }
+  .download-card__quota-text {
+    @apply tabular text-caption text-muted;
+  }
+  .download-card__expiry {
+    @apply text-caption text-muted;
+  }
+  .download-card__actions {
+    @apply mt-2 flex flex-wrap gap-1.5;
+  }
+  .download-card__action-icon {
+    @apply h-3.5 w-3.5;
+  }
+  .download-card__notice {
+    @apply px-3 pb-3;
+  }
+
+  /* ── gift-redeem · phần còn thiếu của khối trong gift.css ── */
+  .gift-redeem__icon {
+    @apply mr-1 inline h-3.5 w-3.5;
+  }
+  .gift-redeem__error {
+    @apply mt-1 text-body-sm text-critical;
+  }
+
+  /* ── order-line · dòng trạng thái đơn ────────────────────
+     Rẽ theo DÒNG HÀNG chứ không theo ĐƠN: một đơn mua áo POD kèm file vector đi
+     cả hai nhánh cùng lúc. Xanh lá CHỈ dành cho "đã giao" — người dùng quét màu
+     trước khi đọc chữ, nên dùng nó cho "đang giao" là nói dối bằng màu. */
+  .status-pill {
+    @apply inline-flex items-center gap-1 rounded-pill px-2 py-0.5;
+    @apply text-body-sm font-medium leading-none;
+  }
+  .status-pill--awaiting-payment {
+    @apply bg-surface-2 text-muted;
+  }
+  .status-pill--in-production,
+  .status-pill--shipped {
+    @apply bg-kind-file-bg text-kind-file;
+  }
+  .status-pill--delivered {
+    @apply bg-ok text-money;
+  }
+  .status-pill--action-needed {
+    @apply bg-critical-soft text-critical;
+  }
+  .status-pill--cancelled {
+    @apply bg-surface-2 text-faint;
+  }
+  .status-pill__icon {
+    @apply h-3 w-3;
+  }
+  .order-line {
+    @apply border-b border-line p-3 transition-colors last:border-b-0;
+  }
+  .order-line:hover {
+    @apply bg-surface-2;
+  }
+  .order-line__row {
+    @apply flex gap-2;
+  }
+  .order-line__thumb {
+    @apply relative h-14 w-14 shrink-0 overflow-hidden rounded-base border border-line bg-surface-2;
+  }
+  .order-line__image {
+    @apply object-cover transition-transform duration-300;
+  }
+  .order-line__thumb:hover .order-line__image {
+    @apply scale-110;
+  }
+  .order-line__body {
+    @apply min-w-0 flex-1;
+  }
+  .order-line__title {
+    @apply line-clamp-2 text-title-sm text-ink;
+  }
+  .order-line__title:hover {
+    @apply underline;
+  }
+  .order-line__variant {
+    @apply mt-0.5 text-caption text-muted;
+  }
+  .order-line__status {
+    @apply mt-1 flex flex-wrap items-center gap-1.5;
+  }
+  .order-line__tracking {
+    @apply tabular text-caption text-muted;
+  }
+  .order-line__amount {
+    @apply shrink-0 text-right;
+  }
+  .order-line__amount-actions {
+    @apply mt-1 flex flex-col items-end gap-1;
+  }
+  .order-line__action-icon {
+    @apply h-3.5 w-3.5;
+  }
+  .order-line__issue {
+    @apply mt-2;
+  }
+
+  /* ── order-summary · bảng tổng tiền ──────────────────────
+     Mọi dòng phải cộng tay ra đúng dòng tổng. Khuyến mại, phí, thuế đều phải
+     hiện thành dòng riêng — người mua cộng lại thấy lệch một xu là mất niềm tin
+     vào toàn bộ con số, kể cả những con số đúng.
+
+     `top-[92px]` = 68px header + 24px thở. Dính thấp hơn thì bảng chui xuống
+     dưới header khi cuộn. */
+  .order-summary {
+    @apply lg:sticky lg:top-[92px];
+  }
+  .order-summary__title {
+    @apply text-title font-medium text-ink;
+  }
+  .order-summary__lines {
+    @apply mt-2 space-y-1.5 border-b border-line pb-2 text-body-sm;
+  }
+  .order-summary__row {
+    @apply flex items-baseline justify-between gap-2;
+  }
+  .order-summary__term {
+    @apply text-muted;
+  }
+  .order-summary__free {
+    @apply text-body-sm font-medium text-money;
+  }
+  .order-summary__total {
+    @apply mt-2 flex items-baseline justify-between;
+  }
+  .order-summary__total-label {
+    @apply text-title font-medium text-ink;
+  }
+  /* Nguồn khiếu nại "thiếu hàng" phổ biến nhất — phải nói TRƯỚC khi thanh toán,
+     không phải giải thích sau khi kiện đầu tiên tới. */
+  .order-summary__parcels {
+    @apply mt-1.5 rounded-base bg-kind-file-bg p-2 text-caption text-ink;
+  }
+  .order-summary__cta {
+    @apply mt-2.5;
+  }
+  .order-summary__note {
+    @apply mt-1.5 text-caption text-faint;
+  }
+
+  /* ── payment-methods ─────────────────────────────────────── */
+  .payment-methods {
+    @apply space-y-2;
+  }
+  .payment-methods__label {
+    @apply flex items-center gap-1.5;
+  }
+  .payment-methods__icon {
+    @apply h-4 w-4;
+  }
+  .payment-methods__card-fields {
+    @apply mt-2 grid gap-x-3 md:grid-cols-2;
+  }
+  .payment-methods__card-number {
+    @apply md:col-span-2;
+  }
+
+  /* ── payment-step ────────────────────────────────────────── */
+  .payment-step__title {
+    @apply mb-1;
+  }
+  .payment-step__intro {
+    @apply mb-3 text-body-sm text-muted;
+  }
+  .payment-step__gift {
+    @apply mt-4;
+  }
+  .payment-step__pay-title {
+    @apply mb-2 mt-4 font-serif text-title-lg text-ink;
+  }
+  .payment-step__actions {
+    @apply mt-3 flex flex-wrap gap-2;
+  }
+
+  /* ── quantity-stepper ────────────────────────────────────
+     Ô giữa KHÔNG bọc qua `Input`: `Input` mang theo viền, nền, ring focus và
+     `w-full` — bốn thứ phải tắt đi để nó nằm gọn trong khung viên thuốc. Ghi đè
+     bốn thuộc tính tốn nhiều hơn là không mượn. */
+  .quantity-stepper {
+    @apply inline-flex items-center rounded-pill border border-line bg-surface transition-colors;
+  }
+  .quantity-stepper:focus-within {
+    @apply border-ink;
+  }
+  .quantity-stepper__input {
+    @apply tabular w-8 bg-transparent text-center text-title-sm font-medium text-ink outline-none;
+  }
+  .quantity-stepper__icon {
+    @apply h-3.5 w-3.5;
+  }
+
+  /* ── rating-input · chấm sao ─────────────────────────────
+     Sao ở đây bấm được nên phải giữ vùng chạm — đó là lý do cỡ không dùng chung
+     với `StarRating` chỉ để hiển thị. */
+  .rating-input {
+    @apply inline-flex items-center gap-0.5;
+  }
+  .rating-input__button {
+    @apply rounded-base p-0.5 outline-none transition-transform duration-150;
+  }
+  .rating-input__button:hover {
+    @apply scale-125;
+  }
+  .rating-input__button:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .rating-input__star {
+    @apply fill-line transition-colors;
+  }
+  .rating-input__star--on {
+    @apply fill-star;
+  }
+  .rating-input__star--sm {
+    @apply h-4 w-4;
+  }
+  .rating-input__star--md {
+    @apply h-6 w-6;
+  }
+
+  /* ── review-step ─────────────────────────────────────────── */
+  .review-step__blocks {
+    @apply space-y-3;
+  }
+  .review-step__head {
+    @apply flex items-start justify-between gap-2;
+  }
+  .review-step__block-title {
+    @apply text-title font-medium text-ink;
+  }
+  .review-step__name {
+    @apply mt-0.5 text-body-sm text-ink;
+  }
+  .review-step__detail {
+    @apply text-body-sm text-muted;
+  }
+  .review-step__guest-note {
+    @apply mt-0.5 text-body-sm text-muted;
+  }
+  .review-step__edit-icon {
+    @apply h-3.5 w-3.5;
+  }
+  .review-step__parcel-title {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .review-step__parcel-mode {
+    @apply ml-1 font-normal text-muted;
+  }
+  /* Nút đặt đơn GIỮ NGUYÊN bề rộng khi đang xử lý và chỉ đổi chữ: nút co lại
+     lúc bấm khiến người dùng tưởng bấm hụt và bấm lại, sinh đơn trùng. */
+  .review-step__place {
+    @apply min-w-[200px];
+  }
+
+  /* ── parcel-lines · danh sách món trong một kiện ─────────
+     Dùng chung ở bước xem lại và bước chọn vận chuyển — hai chỗ liệt kê cùng
+     một thứ, cùng một cỡ ảnh. */
+  .parcel-lines {
+    @apply mt-2 space-y-1.5;
+  }
+  .parcel-lines__item {
+    @apply flex items-center gap-2;
+  }
+  .parcel-lines__thumb {
+    @apply relative h-10 w-10 shrink-0 overflow-hidden rounded-base border border-line bg-surface-2;
+  }
+  .parcel-lines__image {
+    @apply object-cover;
+  }
+  .parcel-lines__body {
+    @apply min-w-0 flex-1;
+  }
+  .parcel-lines__title {
+    @apply truncate text-body-sm text-ink;
+  }
+  .parcel-lines__meta {
+    @apply flex items-center gap-1 text-caption text-muted;
+  }
+  .parcel-lines__meta--plain {
+    @apply text-caption text-muted;
+  }
+
+  /* ── shipment-picker ─────────────────────────────────────
+     Kiện hàng số KHÔNG có ô chọn: chỉ có đúng một cách giao và nó miễn phí. Một
+     ô chọn có duy nhất một lựa chọn là một câu hỏi giả. */
+  .shipment-picker {
+    @apply space-y-2;
+  }
+  .shipment-picker__head {
+    @apply flex flex-wrap items-center justify-between gap-1;
+  }
+  .shipment-picker__title {
+    @apply flex items-center gap-1.5 text-title-sm font-medium text-ink;
+  }
+  .shipment-picker__icon {
+    @apply h-4 w-4;
+  }
+  .shipment-picker__icon--digital {
+    @apply text-kind-file;
+  }
+  .shipment-picker__mode {
+    @apply text-caption text-muted;
+  }
+  .shipment-picker__choice {
+    @apply mt-2 border-t border-line pt-2;
+  }
+  .shipment-picker__label {
+    @apply flex flex-wrap items-center gap-2;
+  }
+  .shipment-picker__label-text {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .shipment-picker__select {
+    @apply min-w-[220px] flex-1;
+  }
+  .shipment-picker__digital {
+    @apply text-body-sm text-money;
+  }
+
+  /* ── browse-toolbar · thanh công cụ duyệt ────────────────
+     Sắp xếp KHÔNG đi qua nháp của bộ lọc: nó là một lựa chọn duy nhất, đổi là
+     muốn thấy kết quả ngay. */
+  .browse-toolbar {
+    @apply flex flex-wrap items-center justify-between gap-2;
+  }
+  .browse-toolbar__right {
+    @apply flex items-center gap-2;
+  }
+  .browse-toolbar__count {
+    @apply tabular text-body-sm text-muted;
+  }
+  .browse-toolbar__sort {
+    @apply flex items-center gap-1.5;
+  }
+  .browse-toolbar__sort-label {
+    @apply hidden text-body-sm text-muted sm:inline;
+  }
+  .browse-toolbar__sort-wrap {
+    @apply w-[190px];
+  }
+  .browse-toolbar__sort-field {
+    @apply rounded-pill;
+  }
+  .browse-toolbar__chips {
+    @apply mt-2 flex flex-wrap items-center gap-1.5;
+  }
+  .browse-toolbar__clear {
+    @apply rounded-pill px-2 py-1 text-title-sm text-action underline-offset-2;
+    @apply outline-none transition-colors;
+  }
+  .browse-toolbar__clear:hover {
+    @apply underline;
+  }
+  .browse-toolbar__clear:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .browse-toolbar__filter-icon {
+    @apply h-4 w-4;
+  }
+  /* 11px, cùng cỡ với số bước trong `.stepper__dot`: đây cũng là một con số nằm
+     trong ô tròn nhỏ, và `text-caption` (13px) làm ô phình ra khỏi hàng nút. */
+  .browse-toolbar__filter-count {
+    @apply tabular ml-0.5 grid h-4 min-w-4 place-items-center rounded-pill bg-ink px-1;
+    @apply text-[11px] font-medium leading-none text-on-dark;
+  }
+
+  /* Chip tiêu chí đang bật — cái giá phải trả cho việc bỏ rail lọc cố định, và
+     là cách duy nhất để người dùng thấy mình đang lọc mà không phải mở panel. */
+  .filter-chip {
+    @apply inline-flex items-center gap-1 rounded-pill border border-line-strong bg-surface;
+    @apply px-2.5 py-1 text-title-sm text-ink outline-none transition-colors;
+  }
+  .filter-chip:hover {
+    @apply bg-surface-2;
+  }
+  .filter-chip:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .filter-chip__icon {
+    @apply h-3 w-3;
+  }
+
+  /* ── filter-panel · nội dung panel lọc ───────────────────── */
+  .filter-panel {
+    @apply space-y-5;
+  }
+  .filter-panel__foot {
+    @apply flex gap-2;
+  }
+  .filter-panel__current {
+    @apply mb-1 rounded-base border border-line px-2.5 py-2 text-title-sm font-medium text-ink;
+  }
+  .filter-panel__category {
+    @apply flex items-center justify-between gap-2 rounded-base px-2.5 py-1.5;
+    @apply text-body-sm text-ink outline-none transition-colors;
+  }
+  .filter-panel__category:hover {
+    @apply bg-surface-2;
+  }
+  .filter-panel__category:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .filter-panel__category-icon {
+    @apply h-3.5 w-3.5 shrink-0 text-faint;
+  }
+  /* Thụt 20px cho khớp với nhãn của radio "Custom" ngay trên nó — hai ô giá là
+     phần mở rộng của lựa chọn đó, không phải một tiêu chí ngang hàng. */
+  .filter-panel__range {
+    @apply mt-1 flex items-center gap-1.5 pl-5;
+  }
+  .filter-panel__range-input {
+    @apply w-24;
+  }
+  .filter-panel__range-sep {
+    @apply text-body-sm text-muted;
+  }
+
+  .filter-group__title {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .filter-group__note {
+    @apply mb-0.5 text-caption text-faint;
+  }
+  .filter-group__body {
+    @apply mt-0.5;
+  }
+
+  .filter-option {
+    @apply flex cursor-pointer items-center gap-1.5 rounded-base px-1 py-1 transition-colors;
+  }
+  .filter-option:hover {
+    @apply bg-surface-2;
+  }
+  .filter-option__input {
+    @apply h-3.5 w-3.5 shrink-0 accent-[var(--color-btn)];
+  }
+  /* Viền đen 10% để ô màu trắng và ô màu kem vẫn có ranh giới trên nền trắng */
+  .filter-option__swatch {
+    @apply h-3.5 w-3.5 shrink-0 rounded-full border border-black/10;
+  }
+  .filter-option__label {
+    @apply text-body-sm text-ink;
+  }
+  .filter-option__count {
+    @apply tabular ml-auto text-caption text-faint;
+  }
+
+  /* Danh sách dài cắt còn 5 dòng: nhóm *Colour* có hơn hai mươi giá trị, bốn
+     nhóm liên tiếp mở hết là một panel dài sáu màn hình mà không ai cuộn tới
+     đáy — cắt ngắn khiến các nhóm bên dưới còn cơ hội được nhìn thấy. */
+  .show-more {
+    @apply mt-0.5 flex items-center gap-1 rounded-base px-1 py-1;
+    @apply text-title-sm text-ink outline-none transition-colors;
+  }
+  .show-more:hover {
+    @apply bg-surface-2;
+  }
+  .show-more:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .show-more__icon {
+    @apply h-3.5 w-3.5;
+  }
+}

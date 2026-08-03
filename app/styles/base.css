@@ -1,0 +1,118 @@
+/* ============================================================
+   LỚP NỀN — cầu nối shadcn, reset, và utility tự định nghĩa
+   Nạp từ app/globals.css (entry duy nhất).
+   ============================================================ */
+/* ============================================================
+   CẦU NỐI shadcn → token của ta
+   shadcn mặc định dùng --primary, --muted, --destructive…
+   Ánh xạ MỘT LẦN ở đây; component không nhắc tới chúng nữa.
+   ============================================================ */
+
+@layer base {
+  :root {
+    --background:  var(--color-canvas);
+    --foreground:  var(--color-ink);
+    --primary:     var(--color-btn);
+    --primary-foreground: var(--color-on-dark);
+    --secondary:   var(--color-surface-2);
+    --muted:       var(--color-surface-2);
+    --muted-foreground: var(--color-muted);
+    --destructive: var(--color-critical);
+    --border:      var(--color-line);
+    --input:       var(--color-line);
+    --ring:        var(--color-ink);
+    --radius:      var(--radius-base);
+  }
+
+  * { border-color: var(--color-line); }
+
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    letter-spacing: .08px;   /* Graphik có letter-spacing dương, không âm */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Dấu tiếng Việt chồng (ế ộ ữ) cần dòng thoáng — đừng hạ xuống 1.2 */
+  h1, h2, h3 { letter-spacing: 0; }
+
+  /* Không để một chữ trơ trọi ở dòng cuối tiêu đề. Trình duyệt cân lại số từ
+     mỗi dòng; với tiêu đề serif hai ba dòng, khác biệt rất dễ thấy. */
+  h1, h2, h3 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+
+  /* Bấm vào ảnh nhỏ hay mũi tên rồi trang nhảy giật là mất chỗ đang đọc.
+     `scroll-behavior` chỉ áp khi người dùng KHÔNG bật giảm chuyển động. */
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+
+  /* Người bật "giảm chuyển động" ở hệ điều hành đang nói rõ là chuyển động
+     làm họ khó chịu hoặc chóng mặt. Tắt hết chứ không giảm một nửa. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Ô nhập trong hệ thống này chạy ở 13px cho khớp với nút và nhãn. Nhưng
+     Safari trên iOS tự phóng to CẢ TRANG khi tiêu điểm rơi vào ô có cỡ chữ
+     dưới 16px, rồi không thu lại — người dùng phải chụm tay để đọc tiếp phần
+     còn lại của biểu mẫu.
+
+     Xử lý ở đây, một lần, theo THIẾT BỊ chứ không theo bề rộng màn hình:
+     `pointer: coarse` đúng là tập thiết bị có hành vi đó. Làm bằng biến thể
+     responsive thì máy tính bảng và cửa sổ hẹp trên desktop cũng bị nâng chữ
+     theo, dù chúng không hề phóng to. */
+  @media (pointer: coarse) {
+    input,
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
+
+  ::selection {
+    background: var(--color-brand-soft);
+    color: var(--color-ink);
+  }
+
+  /* Vòng focus mặc định của trình duyệt mỗi nơi một kiểu và hay chìm vào nền.
+     Đặt một lần ở đây; component nào cần khác thì tự ghi đè bằng
+     `focus-visible:ring-*`. */
+  :focus-visible {
+    outline: 2px solid var(--color-action);
+    outline-offset: 2px;
+  }
+}
+
+/* Utility tự định nghĩa phải khai bằng `@utility`, KHÔNG phải `@layer utilities`.
+   Chỉ `@utility` mới đăng ký chúng vào từ điển của Tailwind, và nhờ vậy các block
+   BEM trong `app/styles/` mới `@apply` được. Khai bằng `@layer utilities` thì
+   class vẫn chạy trong JSX nhưng `@apply no-scrollbar` báo
+   `Cannot apply unknown utility class`. */
+
+/* Bắt buộc cho mọi con số tiền: không có nó thì cột số so le */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ô ảnh chính giữ đúng tỉ lệ 5:4 của Etsy (padding-top: 80%) */
+@utility ratio-listing {
+  aspect-ratio: 5 / 4;
+}
+
+/* Dải ảnh nhỏ dựng đứng — ẩn thanh cuộn nhưng vẫn cuộn được */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

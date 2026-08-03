@@ -1,0 +1,1062 @@
+/* ============================================================
+   BEM · trang chi tiết sản phẩm
+   Nạp từ app/globals.css (entry duy nhất).
+   ============================================================ */
+/* ============================================================
+   KHỐI BEM · `buy-action` — hai nút mua ở trang chi tiết sản phẩm
+   ============================================================
+
+   Đây là NGOẠI LỆ DUY NHẤT của quy tắc "Tailwind v4 duy nhất" trong CLAUDE.md,
+   làm theo yêu cầu trực tiếp của người dùng và chỉ áp cho hai nút này.
+
+   ── Vì sao hai nút này đáng có CSS riêng ──────────────────────────────
+   *Add to cart* là nút sinh ra doanh thu. Nó xứng đáng được chăm hơn nút "Lưu
+   địa chỉ", và những thứ làm nó đẹp hơn — chuyển sắc nền, vệt sáng quét ngang
+   khi rê chuột — đều là thứ tiện ích Tailwind diễn đạt rất vụng: một vệt sáng
+   cần `::after`, `overflow: hidden` và một transition riêng cho `left`.
+
+   ── Vì sao nằm trong globals.css chứ không phải file .css riêng ───────
+   CLAUDE.md cấm file `.css` rời. Đặt ở đây giữ được điều khoản đó, và cũng đúng
+   với Tailwind v4: `@layer components` xếp TRƯỚC `utilities`, nên nếu sau này ai
+   thêm một class tiện ích lên cùng thẻ, tiện ích vẫn thắng như mong đợi.
+
+   ── Vì sao mọi màu đều là `var(--color-*)` ───────────────────────────
+   Viết `#222` thẳng vào đây là tạo ra một bản sao của token: đổi `--color-btn`
+   trong `@theme` thì cả sàn đổi theo, trừ đúng nút quan trọng nhất. `color-mix`
+   dùng để pha sắc sáng hơn cho chuyển sắc, vẫn neo vào token gốc.
+
+   Quy ước tên: block__element--modifier.
+     .buy-action              khối
+     .buy-action__label       phần chữ
+     .buy-action__icon        phần biểu tượng
+     .buy-action--primary     Add to cart
+     .buy-action--secondary   Buy it now
+     .buy-action--done        đã thêm vào giỏ
+   ============================================================ */
+@layer components {
+  .buy-action {
+    position: relative;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    /* cắt vệt sáng theo đúng bo góc viên thuốc */
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-pill);
+    padding: 9px 16px;
+    font-family: var(--font-sans);
+    font-size: var(--text-title-sm);
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: .1px;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color .2s ease,
+      border-color .2s ease,
+      color .2s ease,
+      box-shadow .25s ease,
+      transform .12s ease;
+  }
+
+  .buy-action:disabled {
+    opacity: .4;
+    pointer-events: none;
+  }
+
+  /* Nhún rất nhẹ khi nhấn: đủ để ngón tay biết máy đã nhận, chưa thành hoạt hình */
+  .buy-action:active {
+    transform: scale(.985);
+  }
+
+  /* ── vệt sáng quét ngang ────────────────────────────────
+     Không đặt `z-index: -1`: như thế nó chui xuống dưới nền của chính nút và
+     biến mất. Để mặc định thì nó nằm trên nền, và phần chữ được `__label` đẩy
+     lên trên bằng `position: relative`. */
+  .buy-action::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -60%;
+    width: 45%;
+    transform: skewX(-18deg);
+    pointer-events: none;
+    transition: left .55s ease;
+  }
+
+  .buy-action:hover::after {
+    left: 130%;
+  }
+
+  .buy-action__label {
+    position: relative;
+  }
+
+  .buy-action__icon {
+    position: relative;
+    height: 16px;
+    width: 16px;
+    flex-shrink: 0;
+  }
+
+  /* ── Add to cart ────────────────────────────────────────
+     Chuyển sắc rất nhẹ (sáng hơn 12% ở đỉnh) thay vì một mảng đen phẳng: nút
+     trông có khối mà vẫn không thành nút gradient sặc sỡ. */
+  .buy-action--primary {
+    background-image: linear-gradient(
+      175deg,
+      color-mix(in oklab, var(--color-btn) 88%, white) 0%,
+      var(--color-btn) 62%
+    );
+    color: var(--color-on-dark);
+    box-shadow: var(--shadow-elev-1);
+  }
+
+  .buy-action--primary::after {
+    background-image: linear-gradient(
+      100deg,
+      transparent,
+      rgb(255 255 255 / .22),
+      transparent
+    );
+  }
+
+  .buy-action--primary:hover {
+    background-image: linear-gradient(
+      175deg,
+      color-mix(in oklab, var(--color-btn-hover) 88%, white) 0%,
+      var(--color-btn-hover) 62%
+    );
+    box-shadow: var(--shadow-elev-2);
+  }
+
+  .buy-action--primary:active {
+    background-image: none;
+    background-color: var(--color-btn-active);
+  }
+
+  /* ── Buy it now ─────────────────────────────────────────
+     Viền đậm trên nền trắng. Nó là lối mua một món, cố tình nhẹ ký hơn nút đặc
+     ở trên — giá trị đơn hàng đến từ người gom nhiều món. */
+  .buy-action--secondary {
+    border-color: var(--color-line-strong);
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+  }
+
+  .buy-action--secondary::after {
+    background-image: linear-gradient(
+      100deg,
+      transparent,
+      color-mix(in oklab, var(--color-ink) 7%, transparent),
+      transparent
+    );
+  }
+
+  .buy-action--secondary:hover {
+    border-color: var(--color-ink);
+    background-color: var(--color-surface-2);
+    box-shadow: var(--shadow-elev-1);
+  }
+
+  /* ── CTA Nút Mua ngay (Match Category & Sign In Button Color #ECC5C6) ───────────────────── */
+  .buy-action--cyber-gold {
+    background-color: #ECC5C6;
+    background-image: none;
+    color: #030712;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 9999px;
+    box-shadow: 0 4px 14px rgba(236, 197, 198, 0.4);
+  }
+  .buy-action--cyber-gold:hover {
+    background-color: #f3d4d5;
+    box-shadow: 0 6px 18px rgba(236, 197, 198, 0.55);
+    transform: translateY(-1px);
+  }
+
+  /* ── đã thêm vào giỏ ────────────────────────────────────
+     Đè lên `--primary`, nên phải nằm SAU nó trong tệp. */
+  .buy-action--done,
+  .buy-action--done:hover {
+    background-image: none;
+    background-color: var(--color-money);
+    color: var(--color-on-dark);
+  }
+}
+
+/* ============================================================
+   KHỐI BEM · `collect-action` — nút "Add to collection"
+   ============================================================
+
+   Nằm ngay dưới hai nút mua trong cùng hộp mua, nên đặt tên cùng họ với
+   `buy-action` để đọc bảng lớp là thấy quan hệ.
+
+   ── Vì sao khối này viết bằng `@apply`, còn `buy-action` viết CSS thật ──
+   `buy-action` cần `::after`, `overflow: hidden` và một transition riêng cho
+   `left` để làm vệt sáng quét ngang — Tailwind diễn đạt những thứ đó rất vụng,
+   nên nó là ngoại lệ có ghi lý do. Nút này thì **mọi thuộc tính đều có utility
+   tương ứng**, nên `@apply` là đúng: vốn từ vẫn là Tailwind, token vẫn là
+   `@theme`, và không sinh ra bản sao giá trị nào.
+
+   ── Vì sao không có `__label` ─────────────────────────────
+   Phần chữ không cần kiểu riêng — khối đặt cỡ chữ và màu chữ là đủ. Thêm
+   `.collect-action__label` rỗng chỉ để "cho đủ bộ BEM" là thêm một quy tắc CSS
+   không làm gì. `buy-action__label` có thật vì nó cần `position: relative` để
+   nổi lên trên vệt sáng.
+
+   Quy ước tên: block__element--modifier.
+     .collect-action          khối
+     .collect-action__icon    trái tim
+     .collect-action--saved   đã lưu vào bộ sưu tập
+   ============================================================ */
+@layer components {
+  .collect-action {
+    @apply flex items-center gap-1.5 rounded-pill px-3 py-1 text-body-sm
+           font-medium text-ink outline-none transition-colors
+           hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-ink;
+  }
+
+  /* `text-critical` đặt ở đây, KHÔNG ở modifier: trái tim luôn đỏ, dù đã lưu
+     hay chưa. Bản trước viết `saved ? 'fill-critical text-critical' :
+     'text-critical'` — nhánh nào cũng có `text-critical`, tức phép ba ngôi đó
+     chỉ thật sự đổi `fill`.
+
+     `shrink-0` vì nhãn "Saved to your favourites" dài gần gấp đôi "Add to
+     collection"; ở cột hẹp nó xuống dòng và bóp méo trái tim nếu icon co được. */
+  .collect-action__icon {
+    @apply h-3.5 w-3.5 shrink-0 text-critical transition-colors;
+  }
+
+  /* Trạng thái đã lưu = tô kín trái tim. Modifier nằm trên KHỐI rồi với xuống
+     phần tử, đúng cách BEM diễn đạt "một trạng thái của khối đổi diện mạo phần
+     tử bên trong" — thay vì gắn thêm một class trạng thái riêng lên icon. */
+  .collect-action--saved .collect-action__icon {
+    @apply fill-critical;
+  }
+
+  /* `mx-auto mt-2` cũ đã chuyển vào đây: nút nằm giữa cột và cách hai nút mua
+     một khe — đó là quan hệ cố định của nó với hộp mua, không phải lớp bố cục
+     mà chỗ gọi cần đổi. */
+  .collect-action {
+    @apply mx-auto mt-2;
+  }
+}
+
+/* ============================================================
+   BEM · các khối còn lại của trang chi tiết sản phẩm
+   ============================================================ */
+@layer components {
+  /* ── buy-box ─────────────────────────────────────────────
+     Thứ tự khối lấy đúng từ Etsy: bộ chọn biến thể → số lượng → Buy it now
+     (viền) → Add to cart (đặc) → Add to collection → Star Seller. */
+  .buy-box__quantity {
+    @apply mb-2.5;
+  }
+  .buy-box__quantity-label {
+    @apply mb-1 text-title-sm font-medium text-ink;
+  }
+  .buy-box__bundle {
+    @apply mb-3 rounded-card bg-kind-file-bg p-2.5;
+  }
+  .buy-box__bundle-title {
+    @apply flex items-center gap-1.5 text-title-sm font-medium text-ink;
+  }
+  .buy-box__bundle-icon {
+    @apply h-4 w-4 text-kind-file;
+  }
+  .buy-box__bundle-text {
+    @apply mt-0.5 text-body-sm text-muted;
+  }
+  .buy-box__perso {
+    @apply mb-3;
+  }
+  .buy-box__perso-trigger {
+    @apply inline-flex items-center gap-1.5 rounded-pill py-1;
+    @apply text-title-sm font-medium text-ink transition-colors;
+  }
+  .buy-box__perso-trigger:hover {
+    @apply text-action underline;
+  }
+  /* Hai biểu tượng đổi chỗ theo `data-state` của Radix Collapsible: dấu cộng
+     khi đóng, mũi tên xuống khi mở. Bộ chọn thuộc tính đọc rõ hơn chuỗi
+     `group-data-[state=open]:hidden` từng nằm trong JSX. */
+  .buy-box__perso-icon-add {
+    @apply h-3.5 w-3.5 transition-transform;
+  }
+  .buy-box__perso-trigger:hover .buy-box__perso-icon-add {
+    @apply rotate-90;
+  }
+  .buy-box__perso-trigger[data-state='open'] .buy-box__perso-icon-add {
+    @apply hidden;
+  }
+  .buy-box__perso-icon-open {
+    @apply hidden h-3.5 w-3.5;
+  }
+  .buy-box__perso-trigger[data-state='open'] .buy-box__perso-icon-open {
+    @apply block;
+  }
+  .buy-box__perso-optional {
+    @apply font-normal text-muted;
+  }
+  .buy-box__perso-content {
+    @apply pt-2;
+  }
+  .buy-box__perso-label {
+    @apply mb-1 block text-body-sm text-muted;
+  }
+  .buy-box__perso-count {
+    @apply tabular mt-1 text-right text-caption text-faint;
+  }
+  .buy-box__actions {
+    @apply mt-3 space-y-1.5;
+  }
+  .buy-box__added {
+    @apply mt-2 text-center text-body-sm text-money;
+  }
+  .buy-box__guarantee {
+    @apply mt-3.5 flex items-center justify-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-2.5 text-xs font-bold text-emerald-700 shadow-xs;
+  }
+  .buy-box__guarantee-icon {
+    @apply h-4 w-4 text-emerald-600 shrink-0 animate-pulse;
+  }
+  /* Chỉ hiện khi shop THẬT SỰ đạt, và câu chữ nêu rõ đạt bằng cách nào —
+     "Star Seller" trống nghĩa là một huy hiệu ai cũng có. */
+  .buy-box__star-seller {
+    @apply mt-3 flex gap-2 border-t border-line pt-3;
+  }
+  .buy-box__star-seller-icon {
+    @apply mt-0.5 h-4 w-4 shrink-0 fill-current text-star-seller;
+  }
+  .buy-box__star-seller-text {
+    @apply text-caption text-muted;
+  }
+  .buy-box__star-seller-lead {
+    @apply font-medium text-ink;
+  }
+
+  /* ── axis-picker · một trục biến thể, luôn là `<select>` ──
+     `scroll-mt-24` để khi `validate()` cuộn tới trục còn trống thì nhãn không
+     chui lên dưới header dính. */
+  .axis-picker {
+    @apply mb-2.5 scroll-mt-24;
+  }
+  .axis-picker__label {
+    @apply mb-1 flex flex-wrap items-baseline gap-x-1.5 text-title-sm font-medium text-ink;
+  }
+  .axis-picker__optional {
+    @apply font-normal text-muted;
+  }
+  .axis-picker__hint {
+    @apply mb-1 text-caption text-faint;
+  }
+  .axis-picker__error {
+    @apply mt-1 flex items-center gap-1 text-body-sm text-critical;
+  }
+  .axis-picker__error-icon {
+    @apply h-3.5 w-3.5 shrink-0;
+  }
+
+  /* ── expandable · khối dài bị cắt ngắn ───────────────────
+     `max-height` chứ không `display: none`: nội dung vẫn nằm trong DOM nên
+     Google đọc được toàn bộ mô tả, và `Ctrl+F` vẫn tìm thấy chữ đang bị che.
+
+     Lớp mờ dần ở đáy nói rõ "còn nữa" mà không cần thêm chữ nào — một khối bị
+     cắt cụt ngang chữ trông như lỗi hiển thị. */
+  .expandable__body {
+    @apply relative overflow-hidden;
+  }
+  .expandable__body--clamped {
+    @apply max-h-[180px];
+  }
+  .expandable__body--open {
+    @apply max-h-none;
+  }
+  .expandable__fade {
+    @apply pointer-events-none absolute inset-x-0 bottom-0 h-16;
+    @apply bg-gradient-to-t from-surface to-transparent;
+  }
+  .expandable__toggle {
+    @apply mx-auto mt-2 flex items-center gap-1 rounded-pill px-3 py-1.5;
+    @apply text-title-sm font-medium text-ink outline-none transition-colors;
+  }
+  .expandable__toggle:hover {
+    @apply bg-surface-2;
+  }
+  .expandable__toggle:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .expandable__chevron {
+    @apply h-4 w-4 transition-transform duration-200;
+  }
+  .expandable__chevron--open {
+    @apply rotate-180;
+  }
+
+  /* ── image-overlay · khung phóng to toàn màn hình ───────── */
+  .image-overlay__scrim {
+    @apply fixed inset-0 z-50 bg-ink/80;
+    @apply data-[state=open]:animate-in data-[state=open]:fade-in-0;
+    @apply data-[state=closed]:animate-out data-[state=closed]:fade-out-0;
+  }
+  .image-overlay__panel {
+    @apply fixed left-1/2 top-1/2 z-50 flex h-[92vh] w-[96vw] max-w-7xl;
+    @apply -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden;
+    @apply rounded-card bg-surface shadow-elev-4;
+    @apply data-[state=open]:animate-in data-[state=open]:zoom-in-95;
+    @apply data-[state=closed]:animate-out data-[state=closed]:zoom-out-95;
+  }
+  .image-overlay__head {
+    @apply flex items-center gap-3 border-b border-line px-3 py-2;
+  }
+  .image-overlay__title {
+    @apply truncate text-title font-medium;
+  }
+  /* 44px — vùng chạm tối thiểu cho nút đóng của một lớp phủ toàn màn hình */
+  .image-overlay__close {
+    @apply ml-auto grid h-11 w-11 place-items-center rounded-full text-ink;
+  }
+  .image-overlay__close:hover {
+    @apply bg-surface-2;
+  }
+  .image-overlay__close-icon {
+    @apply h-5 w-5;
+  }
+
+  /* ── image-viewer · bộ xem ảnh có phóng to ───────────────
+     `touch-none` bắt buộc: không có nó thì trình duyệt nuốt cử chỉ chụm hai
+     ngón để phóng cả trang, và ảnh không bao giờ nhận được sự kiện. */
+  .image-viewer {
+    @apply flex h-full flex-col;
+  }
+  .image-viewer__stage {
+    @apply relative flex flex-1 select-none items-center justify-center;
+    @apply touch-none overflow-hidden bg-surface-2 cursor-zoom-in;
+  }
+  .image-viewer__stage--zoomed {
+    @apply cursor-grab;
+  }
+  .image-viewer__stage--grabbing {
+    @apply cursor-grabbing;
+  }
+  .image-viewer__img {
+    @apply h-auto max-h-full w-auto max-w-full origin-center will-change-transform;
+  }
+  .image-viewer__nav {
+    @apply absolute top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center;
+    @apply rounded-full bg-surface/90 text-ink shadow-elev-2;
+  }
+  .image-viewer__nav:hover {
+    @apply bg-surface;
+  }
+  .image-viewer__nav--prev {
+    @apply left-3;
+  }
+  .image-viewer__nav--next {
+    @apply right-3;
+  }
+  .image-viewer__nav-icon {
+    @apply h-5 w-5;
+  }
+  .image-viewer__badge {
+    @apply tabular absolute bottom-3 left-3 rounded-full bg-ink/80 px-3 py-1;
+    @apply text-caption font-medium text-white;
+  }
+  .image-viewer__bar {
+    @apply flex items-center gap-2 border-t border-line bg-surface px-3 py-2;
+  }
+  .image-viewer__zoom {
+    @apply grid h-9 w-9 place-items-center rounded-base border border-line-strong text-ink;
+  }
+  .image-viewer__zoom:disabled {
+    @apply opacity-40;
+  }
+  .image-viewer__zoom-icon {
+    @apply h-4 w-4;
+  }
+  .image-viewer__range {
+    @apply h-1 w-40 cursor-pointer accent-brand;
+  }
+  .image-viewer__reset {
+    @apply ml-1 inline-flex h-9 items-center gap-1 rounded-base border border-line-strong px-3;
+    @apply text-caption font-medium text-ink;
+  }
+  .image-viewer__reset:disabled {
+    @apply opacity-40;
+  }
+  .image-viewer__reset-icon {
+    @apply h-3.5 w-3.5;
+  }
+  .image-viewer__caption {
+    @apply ml-auto truncate text-caption text-faint;
+  }
+
+  /* ── item-details · ba accordion ở cột phải ──────────────── */
+  .item-details {
+    @apply mt-6 border-t border-line;
+  }
+  .item-details__highlights-title {
+    @apply mb-1.5 text-title font-medium;
+  }
+  .item-details__highlights {
+    @apply mb-4 space-y-1.5;
+  }
+  .item-details__highlight {
+    @apply flex gap-2 text-body-sm text-copy;
+  }
+  .item-details__highlight-icon {
+    @apply mt-0.5 h-4 w-4 shrink-0 text-muted;
+  }
+  .item-details__para {
+    @apply mb-3 text-body text-copy;
+  }
+  .item-details__attrs {
+    @apply mt-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-body-sm;
+  }
+  /* `display: contents` để cặp dt/dd rơi thẳng vào lưới của `<dl>` mà vẫn giữ
+     được thẻ bọc cho `key` của React. */
+  .item-details__attr {
+    @apply contents;
+  }
+  .item-details__policies {
+    @apply grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-body-sm;
+  }
+  .item-details__term {
+    @apply text-muted;
+  }
+  .item-details__value {
+    @apply text-ink;
+  }
+  .item-details__deliver-to {
+    @apply mt-3 inline-flex items-center gap-1 text-title-sm font-medium text-ink;
+    @apply underline underline-offset-2 outline-none transition-colors;
+  }
+  .item-details__deliver-to:hover {
+    @apply text-action;
+  }
+  .item-details__deliver-to:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .item-details__deliver-icon {
+    @apply h-3.5 w-3.5;
+  }
+  .item-details__trust {
+    @apply flex gap-2 rounded-card bg-trust p-3;
+  }
+  .item-details__trust--eco {
+    @apply mt-2 bg-kind-file-bg;
+  }
+  .item-details__trust-icon {
+    @apply mt-0.5 h-4 w-4 shrink-0 text-ink;
+  }
+  .item-details__trust--eco .item-details__trust-icon {
+    @apply text-kind-file;
+  }
+  .item-details__trust-text {
+    @apply text-body-sm text-copy;
+  }
+  .item-details__trust-lead {
+    @apply font-medium text-ink;
+  }
+
+  /* ── media-frame ─────────────────────────────────────────── */
+  .media-frame {
+    @apply block;
+  }
+  .media-frame__media {
+    @apply h-full w-full;
+  }
+  /* Tam giác vẽ bằng border — một icon nữa cho một hình đơn giản thế này là
+     thêm một import không đổi lại được gì. */
+  .video-badge {
+    @apply pointer-events-none grid h-6 w-6 place-items-center rounded-full bg-ink/70 text-on-dark;
+  }
+  .video-badge__triangle {
+    @apply ml-0.5 h-0 w-0 border-y-[5px] border-l-[8px] border-y-transparent border-l-current;
+  }
+
+  /* ── price-block · khối giá, thứ TO NHẤT trên trang ──────
+     27.01px, to hơn cả `<h1>`. Không phải lỗi phân cấp: người mua vừa bấm vào
+     từ ảnh trong lưới nên đã biết đang xem cái gì — cái họ chưa biết là giá.
+
+     Nhãn giảm giá là VIÊN THUỐC xanh, không phải chữ đỏ: đỏ ở đây sẽ đụng với
+     `text-critical` vốn dành cho lỗi và cảnh báo. */
+  .price-block__row {
+    @apply flex flex-wrap items-baseline gap-x-2 gap-y-1;
+  }
+  .price-block__off {
+    @apply rounded-pill bg-money-soft px-2 py-0.5 text-caption font-medium text-money;
+  }
+  .price-block__note {
+    @apply mt-0.5 text-caption text-muted;
+  }
+  .price-block__free {
+    @apply font-medium text-money;
+  }
+  .price-block__sale {
+    @apply mt-0.5 text-title-sm font-medium text-money;
+  }
+
+  /* ── gallery · thư viện media của sản phẩm ───────────────
+     Dải nhỏ DỰNG ĐỨNG bên trái, mục lớn bên phải. Khung mục lớn VUÔNG chứ
+     không 5:4: thẻ trong lưới giữ 5:4 vì ở đó chiều cao nhân lên theo số hàng,
+     còn ở đây khung vuông cho ảnh lớn hơn ~25% ở cùng bề ngang. */
+  .gallery__layout {
+    @apply flex gap-2;
+  }
+  /* `min-h-0` để cuộn được: dải bị `align-items: stretch` kéo cao bằng mục lớn,
+     và không có `min-h-0` thì flex từ chối co lại nên `overflow-y-auto` không
+     bao giờ kích hoạt.
+
+     Ngưỡng là `md` (640px) chứ không `sm`: dải ăn cứng 64px + 8px khe, ở 480px
+     đó là 15% bề ngang và ảnh chính chỉ còn 384px. */
+  .gallery__strip {
+    @apply no-scrollbar hidden min-h-0 w-[64px] shrink-0 flex-col gap-1.5 overflow-y-auto md:flex;
+  }
+  .gallery__strip--horizontal {
+    @apply no-scrollbar mt-2 flex gap-1.5 overflow-x-auto pb-1 md:hidden;
+  }
+  .gallery__strip-item {
+    @apply w-[56px] shrink-0;
+  }
+  .gallery__thumb {
+    @apply relative block w-full overflow-hidden rounded-base bg-surface-3;
+    @apply outline-none ring-2 ring-inset ring-transparent transition-all duration-200;
+  }
+  .gallery__thumb:hover {
+    @apply ring-line-strong md:translate-x-0.5;
+  }
+  .gallery__thumb:focus-visible {
+    @apply ring-action;
+  }
+  .gallery__thumb--active,
+  .gallery__thumb--active:hover {
+    @apply translate-x-0 ring-ink;
+  }
+  .gallery__thumb-image {
+    @apply aspect-square h-auto w-full object-cover;
+  }
+  .gallery__thumb-video {
+    @apply absolute left-1 top-1 h-5 w-5;
+  }
+  /* 9px là chữ nhỏ nhất trong hệ, và chỉ ở đây: nhãn SIZES nằm trong một ô ảnh
+     nhỏ 64px, mọi cỡ lớn hơn đều tràn ra hai dòng. */
+  .gallery__thumb-chart {
+    @apply absolute inset-x-0 bottom-0 bg-ink/75 py-px text-center;
+    @apply text-[9px] font-medium leading-tight text-white;
+  }
+  .gallery__main {
+    @apply min-w-0 flex-1;
+  }
+  .gallery__stage {
+    @apply relative;
+  }
+  .gallery__open {
+    @apply block aspect-square w-full overflow-hidden rounded-lg bg-surface-2;
+    @apply cursor-default shadow-elev-1 ring-1 ring-inset ring-line;
+  }
+  .gallery__open--zoomable {
+    @apply cursor-zoom-in;
+  }
+  .gallery__media {
+    @apply relative h-full w-full;
+  }
+  .gallery__image {
+    @apply object-cover transition-transform duration-500 ease-out;
+  }
+  .gallery__stage:hover .gallery__image {
+    @apply scale-[1.04];
+  }
+  .gallery__zoom-hint {
+    @apply pointer-events-none absolute bottom-3 left-3 inline-flex translate-y-1 items-center gap-1;
+    @apply rounded-pill bg-surface/95 px-2.5 py-1 text-body-sm font-medium text-ink;
+    @apply opacity-0 shadow-elev-2 transition-all duration-200;
+  }
+  .gallery__stage:hover .gallery__zoom-hint {
+    @apply translate-y-0 opacity-100;
+  }
+  .gallery__zoom-icon {
+    @apply h-3.5 w-3.5;
+  }
+  .gallery__fav {
+    @apply absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-surface;
+    @apply shadow-elev-2 outline-none transition-transform duration-200;
+  }
+  .gallery__fav:hover {
+    @apply scale-110;
+  }
+  .gallery__fav:active {
+    @apply scale-95;
+  }
+  .gallery__fav:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .gallery__fav-icon {
+    @apply h-4 w-4 text-ink transition-colors;
+  }
+  .gallery__fav-icon--on {
+    @apply fill-critical text-critical;
+  }
+  /* Mũi tên chỉ hiện khi rê vào khung ảnh — chúng che một phần ảnh, thứ người
+     ta vào trang để xem. Bàn phím vẫn thấy chúng qua `:focus-visible`. */
+  .gallery__nav {
+    @apply absolute top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full;
+    @apply bg-surface text-ink opacity-0 shadow-elev-2 outline-none transition-all duration-200;
+  }
+  .gallery__stage:hover .gallery__nav {
+    @apply opacity-100;
+  }
+  .gallery__nav:hover {
+    @apply scale-110;
+  }
+  .gallery__nav:active {
+    @apply scale-95;
+  }
+  .gallery__nav:focus-visible {
+    @apply opacity-100 ring-2 ring-ink;
+  }
+  .gallery__nav--prev {
+    @apply left-3;
+  }
+  .gallery__nav--next {
+    @apply right-3;
+  }
+  .gallery__nav-icon {
+    @apply h-4 w-4;
+  }
+  .gallery__caption {
+    @apply mt-1.5 text-caption text-faint;
+  }
+  .gallery__caption-index {
+    @apply tabular;
+  }
+
+  /* ── related-searches ────────────────────────────────────
+     Dải trên có ảnh (sáu cụm ta tự tin nhất), dải dưới chỉ có chip chữ: hai
+     mươi thẻ có ảnh thì dải dưới dài hơn cả phần nội dung chính, mà đó là đuôi
+     dài — nhiều lựa chọn, mỗi lựa chọn ít khả năng được bấm. */
+  .related-searches {
+    @apply mt-12 border-t border-line pt-8;
+  }
+  .related-searches__heading {
+    @apply mb-4;
+  }
+  .related-searches__heading--chips {
+    @apply mb-3 mt-8;
+  }
+  /* Nhịp cột của CHÂN TRANG Etsy (4 cột ở 900px rồi 6 cột ở 1200px), không
+     phải nhịp của lưới hàng: nội dung một dòng chữ thì cột hẹp vẫn đọc được. */
+  .related-searches__tiles {
+    @apply grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6;
+  }
+  .related-searches__tile {
+    @apply flex items-center gap-2 rounded-card border border-line bg-surface p-2;
+    @apply outline-none transition-all duration-200;
+  }
+  .related-searches__tile:hover {
+    @apply -translate-y-0.5 border-ink shadow-elev-2;
+  }
+  .related-searches__tile:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .related-searches__media {
+    @apply relative h-12 w-12 shrink-0 overflow-hidden rounded-base bg-surface-2;
+  }
+  .related-searches__image {
+    @apply object-cover transition-transform duration-300;
+  }
+  .related-searches__tile:hover .related-searches__image {
+    @apply scale-110;
+  }
+  .related-searches__label {
+    @apply min-w-0 text-title-sm text-ink;
+  }
+  .related-searches__tile:hover .related-searches__label {
+    @apply underline;
+  }
+  .related-searches__chips {
+    @apply flex flex-wrap gap-2;
+  }
+  .related-searches__chip {
+    @apply inline-block rounded-pill bg-surface-2 px-3 py-1.5 text-title-sm text-ink;
+    @apply outline-none transition-colors;
+  }
+  .related-searches__chip:hover {
+    @apply bg-surface-3;
+  }
+  .related-searches__chip:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+
+  /* ── reviews ─────────────────────────────────────────────
+     Điểm từng trục là VÒNG TRÒN chứ không phải thanh tiến độ: thanh ngầm nói
+     "càng dài càng tốt" nên mắt so độ dài và kết luận trục ngắn nhất là *tệ* —
+     nhưng 4.6 và 4.9 đều là điểm tốt. Vòng tròn buộc người đọc đọc số. */
+  .reviews {
+    @apply mt-10 border-t border-line pt-6;
+  }
+  .reviews__count {
+    @apply tabular text-muted;
+  }
+  .reviews__topics {
+    @apply mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5;
+  }
+  .reviews__topics-label {
+    @apply text-body-sm font-medium text-ink;
+  }
+  .reviews__topic-list {
+    @apply flex flex-wrap gap-x-3 gap-y-1;
+  }
+  .reviews__topic {
+    @apply flex items-center gap-1 text-body-sm text-muted;
+  }
+  .reviews__topic-icon {
+    @apply h-3.5 w-3.5 shrink-0 text-money;
+  }
+  .reviews__summary {
+    @apply mt-3 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-lg bg-surface-2 p-4;
+  }
+  .reviews__average {
+    @apply flex items-center gap-2;
+  }
+  .reviews__average-value {
+    @apply tabular text-price font-medium text-ink;
+  }
+  .reviews__average-note {
+    @apply text-caption text-muted;
+  }
+  .reviews__breakdown {
+    @apply flex flex-wrap gap-x-5 gap-y-2;
+  }
+  .reviews__score {
+    @apply flex items-center gap-1.5;
+  }
+  .reviews__score-label {
+    @apply text-body-sm text-muted;
+  }
+  .score-ring {
+    @apply tabular grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line;
+    @apply bg-surface text-body-sm font-medium text-ink;
+  }
+  .reviews__list {
+    @apply mt-4;
+  }
+  .reviews__item {
+    @apply border-b border-line py-4 last:border-b-0;
+  }
+  .reviews__item-head {
+    @apply flex flex-wrap items-center justify-between gap-2;
+  }
+  .reviews__item-rating {
+    @apply flex items-center gap-1.5;
+  }
+  .reviews__item-score {
+    @apply tabular text-title-sm font-medium text-ink;
+  }
+  .reviews__author {
+    @apply flex items-center gap-1.5;
+  }
+  .reviews__avatar {
+    @apply h-5 w-5 ring-1 ring-line;
+  }
+  .reviews__initials {
+    @apply text-[10px];
+  }
+  .reviews__author-name {
+    @apply text-body-sm text-ink;
+  }
+  .reviews__dot {
+    @apply text-caption text-faint;
+  }
+  .reviews__date {
+    @apply text-caption text-muted;
+  }
+  .reviews__body {
+    @apply mt-1.5 flex gap-3;
+  }
+  .reviews__text-col {
+    @apply min-w-0 flex-1;
+  }
+  /* 68ch — quá 75 ký tự một dòng thì mắt mất dấu khi xuống dòng, và đánh giá
+     là khối chữ dài nhất người mua thật sự đọc hết. */
+  .reviews__text {
+    @apply max-w-[68ch] text-body text-copy;
+  }
+  .reviews__variant {
+    @apply mt-1.5 text-caption text-muted;
+  }
+  .reviews__variant-value {
+    @apply text-ink;
+  }
+  .reviews__photo {
+    @apply h-[72px] w-[72px] shrink-0 rounded-base bg-surface-3 object-cover;
+    @apply ring-1 ring-inset ring-line transition-transform duration-300;
+  }
+  .reviews__photo:hover {
+    @apply scale-105;
+  }
+  .reviews__more {
+    @apply mt-4 flex flex-wrap items-center justify-center gap-3;
+  }
+  .reviews__gallery {
+    @apply mt-8;
+  }
+  .reviews__gallery-list {
+    @apply no-scrollbar mt-3 flex gap-2 overflow-x-auto pb-1;
+  }
+  .reviews__gallery-item {
+    @apply shrink-0;
+  }
+  .reviews__gallery-photo {
+    @apply h-[150px] w-[150px] rounded-card bg-surface-3 object-cover;
+    @apply ring-1 ring-inset ring-line transition-transform duration-300;
+  }
+  .reviews__gallery-photo:hover {
+    @apply scale-105;
+  }
+
+  /* ── seller-card ─────────────────────────────────────────
+     Đặt ở CỘT TRÁI dưới phần đánh giá, không nhét vào accordion bên phải: cột
+     phải là nơi để MUA. Người đọc tới đây đang cân nhắc "shop này có đáng tin
+     không" — một câu hỏi cần chỗ. */
+  .seller-card {
+    @apply mt-8 rounded-lg border border-line p-4;
+  }
+  .seller-card__head {
+    @apply flex flex-wrap items-start justify-between gap-3;
+  }
+  .seller-card__identity {
+    @apply flex min-w-0 items-center gap-3;
+  }
+  .seller-card__identity-text {
+    @apply min-w-0;
+  }
+  .seller-card__avatar {
+    @apply h-14 w-14 rounded-card ring-1 ring-line;
+  }
+  .seller-card__avatar-fallback {
+    @apply rounded-card bg-trust text-title;
+  }
+  .seller-card__name {
+    @apply font-serif text-title-lg text-ink;
+  }
+  .seller-card__shop-link {
+    @apply text-title-sm font-normal text-muted underline underline-offset-2 transition-colors;
+  }
+  .seller-card__shop-link:hover {
+    @apply text-action;
+  }
+  .seller-card__location {
+    @apply text-caption text-muted;
+  }
+  .seller-card__actions {
+    @apply flex flex-wrap gap-1.5;
+  }
+  .seller-card__action-icon {
+    @apply h-4 w-4;
+  }
+  .seller-card__stats {
+    @apply mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-body-sm text-muted;
+  }
+  .seller-card__response {
+    @apply mt-0.5 text-caption text-muted;
+  }
+  .seller-card__badges {
+    @apply mt-4 grid gap-3 border-t border-line pt-4 sm:grid-cols-2;
+  }
+  .seller-card__badge {
+    @apply flex gap-2;
+  }
+  .seller-card__badge-icon {
+    @apply mt-0.5 h-4 w-4 shrink-0 text-ink;
+  }
+  .seller-card__badge-title {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .seller-card__badge-body {
+    @apply text-caption text-muted;
+  }
+  .seller-card__more {
+    @apply mt-4 border-t border-line pt-4;
+  }
+  .seller-card__more-head {
+    @apply mb-2 flex flex-wrap items-baseline justify-between gap-2;
+  }
+  .seller-card__more-title {
+    @apply font-serif text-title text-ink;
+  }
+  .seller-card__visit {
+    @apply text-title-sm text-action underline-offset-2;
+  }
+  .seller-card__visit:hover {
+    @apply underline;
+  }
+  .seller-card__grid {
+    @apply grid grid-cols-2 gap-3 sm:grid-cols-4;
+  }
+  .seller-card__tile {
+    @apply block outline-none;
+  }
+  .seller-card__tile:focus-visible {
+    @apply ring-2 ring-ink;
+  }
+  .seller-card__tile-media {
+    @apply relative aspect-square overflow-hidden rounded-card bg-surface-2;
+    @apply ring-1 ring-inset ring-line transition-shadow duration-200;
+  }
+  .seller-card__tile:hover .seller-card__tile-media {
+    @apply shadow-elev-2;
+  }
+  .seller-card__tile-image {
+    @apply object-cover transition-transform duration-300;
+  }
+  .seller-card__tile:hover .seller-card__tile-image {
+    @apply scale-105;
+  }
+  .seller-card__tile-title {
+    @apply mt-1 line-clamp-2 text-caption text-ink;
+  }
+  .seller-card__tile:hover .seller-card__tile-title {
+    @apply underline;
+  }
+  .seller-card__tile-price {
+    @apply mt-0.5 block;
+  }
+
+  /* ── star-rating · sao chỉ để ĐỌC ────────────────────────
+     Nửa sao vẽ bằng cách chồng một lớp sao đặc bị cắt theo chiều ngang, chứ
+     không dùng icon nửa sao riêng: cách này cho mọi phân số, không chỉ 0.5.
+
+     Sao rỗng dùng `fill-line` (#dbdbdb) chứ không `#222`: khi hình đã đặc thì
+     #222 cho ra một ngôi sao ĐEN, đọc thành "đã chấm". */
+  .star-rating {
+    @apply inline-flex items-center gap-1;
+  }
+  .star-rating__stars {
+    @apply relative inline-flex gap-px;
+  }
+  .star-rating__star {
+    @apply shrink-0 fill-line;
+  }
+  /* 10px / 12px. Sao ở đây không bấm được nên không chịu ràng buộc vùng chạm
+     24×24 của WCAG — ràng buộc đó áp cho `.rating-input__star`. */
+  .star-rating__star--sm {
+    @apply h-2.5 w-2.5;
+  }
+  .star-rating__star--md {
+    @apply h-3 w-3;
+  }
+  .star-rating__fill {
+    @apply absolute inset-0 inline-flex gap-px overflow-hidden;
+  }
+  .star-rating__fill .star-rating__star {
+    @apply fill-star;
+  }
+  .star-rating__count {
+    @apply tabular text-body-sm text-muted;
+  }
+}

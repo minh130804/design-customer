@@ -1,0 +1,235 @@
+/* ============================================================
+   BEM · mảnh tái dùng nhiều nơi (components/shared)
+   Nạp từ app/globals.css (entry duy nhất).
+   ============================================================ */
+
+@layer components {
+  /* ── banner · dải thông báo ──────────────────────────────
+     Vạch màu 3px bên trái thay vì viền cả bốn cạnh: dải thông báo nằm chen giữa
+     nội dung, một khung kín nữa làm trang thành lưới hộp. Vạch trái đủ để mắt
+     bắt được tông màu ngay ở lề đọc.
+
+     Màu biểu tượng đi theo tông của KHỐI, không phải một bản đồ màu riêng trong
+     JSX — bản trước giữ hai bản đồ song song (`bannerVariants` và `ICON_COLOUR`)
+     và không có gì buộc chúng khớp nhau. */
+  .banner {
+    @apply flex gap-2 rounded-card border-l-[3px] p-2.5 text-ink;
+  }
+  .banner--info {
+    @apply border-l-action bg-kind-file-bg;
+  }
+  .banner--success {
+    @apply border-l-money bg-money-soft;
+  }
+  .banner--warning {
+    @apply border-l-brand bg-brand-soft;
+  }
+  .banner--critical {
+    @apply border-l-critical bg-critical-soft;
+  }
+  .banner__icon {
+    @apply mt-0.5 h-4 w-4 shrink-0;
+  }
+  .banner--info .banner__icon {
+    @apply text-action;
+  }
+  .banner--success .banner__icon {
+    @apply text-money;
+  }
+  .banner--warning .banner__icon {
+    @apply text-brand;
+  }
+  .banner--critical .banner__icon {
+    @apply text-critical;
+  }
+  .banner__body {
+    @apply min-w-0 flex-1;
+  }
+  .banner__title {
+    @apply text-title-sm font-medium text-ink;
+  }
+  .banner__text {
+    @apply text-body-sm text-muted;
+  }
+  /* Đoạn thứ hai trở đi cần khe thở; đoạn đầu thì không, nếu không dải bị lệch
+     so với biểu tượng bên trái. */
+  .banner__text p + p {
+    @apply mt-1;
+  }
+  /* Nút nằm bên phải CÙNG HÀNG, không xuống dòng — dải cao hai dòng đẩy hết
+     nội dung thật xuống dưới nếp gấp. */
+  .banner__action {
+    @apply shrink-0 self-center;
+  }
+
+  /* ── empty-state ─────────────────────────────────────────
+     Viền đứt: một bảng trống có viền liền trông như khối nội dung đã tải xong và
+     rỗng thật; viền đứt đọc ra là "chỗ này còn để trống". */
+  .empty-state {
+    @apply flex flex-col items-center rounded-card border border-dashed border-line;
+    @apply px-4 py-8 text-center;
+  }
+  .empty-state__icon {
+    @apply mb-2 text-faint;
+  }
+  .empty-state__title {
+    @apply text-title font-medium text-ink;
+  }
+  /* 46ch là bề rộng dòng đọc thoải mái; câu giải thích trong trạng thái rỗng
+     thường dài hai dòng và căn giữa, để tràn hết chiều ngang thì mắt phải quét
+     quá xa. */
+  .empty-state__text {
+    @apply mt-1 max-w-[46ch] text-body-sm text-muted;
+  }
+  .empty-state__action {
+    @apply mt-3;
+  }
+
+  /* ── field · ô nhập kèm nhãn, gợi ý và lỗi ───────────────── */
+  .field {
+    @apply mb-2;
+  }
+  .field__optional {
+    @apply ml-1 font-normal text-faint;
+  }
+  .field__error {
+    @apply mt-0.5 flex items-center gap-1 text-body-sm text-critical;
+  }
+  .field__error-icon {
+    @apply h-3.5 w-3.5 shrink-0;
+  }
+  .field__hint {
+    @apply mt-0.5 text-caption text-faint;
+  }
+
+  /* ── kind-badge ──────────────────────────────────────────── */
+  .kind-badge__icon {
+    @apply h-3 w-3;
+  }
+
+  /* ── money · số tiền ─────────────────────────────────────
+     `tabular` là bắt buộc, không phải modifier: thiếu nó thì cột số trong bảng
+     đối soát so le và người đọc mất tin tưởng vào con số trước khi kịp đọc.
+
+     Giá bán để ĐEN, không tô đỏ. Đỏ ở sàn châu Á là tín hiệu giảm giá; nếu mọi
+     giá đều đỏ thì lúc giảm giá thật không còn cách nào nhấn mạnh. */
+  .money {
+    @apply tabular whitespace-nowrap;
+  }
+  .money--price {
+    @apply text-ink;
+  }
+  .money--in {
+    @apply text-money;
+  }
+  .money--out {
+    @apply text-critical;
+  }
+  .money--quiet {
+    @apply text-muted;
+  }
+  .money--struck {
+    @apply text-faint line-through;
+  }
+  .money--hero {
+    @apply text-price font-medium;
+  }
+  .money--lg {
+    @apply text-title-lg font-medium;
+  }
+  .money--base {
+    @apply text-title font-medium;
+  }
+  .money--sm {
+    @apply text-body-sm;
+  }
+
+  /* ── page-title · <h1> của một trang ─────────────────────
+     `base` (19px) cho trang tiện ích — thứ người dùng vào để xem là dữ liệu bên
+     dưới. `display` (31px) cho trang mà chính tiêu đề là nội dung. */
+  .page-title {
+    @apply font-serif text-ink;
+  }
+  .page-title--base {
+    @apply text-title-lg;
+  }
+  .page-title--display {
+    @apply text-heading leading-tight;
+  }
+
+  /* ── section-heading ─────────────────────────────────────
+     Vạch dài 32px chứ không phải đường kẻ chạy hết chiều ngang: đường kẻ hết
+     chiều ngang CHIA trang thành hai phần rời nhau, còn một vạch ngắn neo dưới
+     chữ thì gắn với chính tiêu đề đó. */
+  .section-heading {
+    @apply flex flex-wrap items-baseline justify-between gap-2;
+  }
+  .section-heading__title {
+    @apply font-serif text-title-lg text-ink;
+  }
+  .section-heading__rule {
+    @apply mt-1 block h-0.5 w-8 rounded-pill bg-brand;
+  }
+
+  /* ── link · liên kết trong một câu văn ───────────────────
+     Gạch chân CHỈ khi rê chuột: một đoạn văn có bốn liên kết gạch chân sẵn đọc
+     như một trang tra cứu. Màu `--color-action` đủ để nhận ra, và `:hover` xác
+     nhận lại trước khi bấm. */
+  .link {
+    @apply text-action;
+  }
+  .link:hover {
+    @apply underline;
+  }
+
+  /* ── stepper · thanh bước ──────────────────────────────── */
+  .stepper__list {
+    @apply no-scrollbar flex items-center justify-center gap-2 overflow-x-auto py-1;
+  }
+  .stepper__item {
+    @apply flex items-center gap-2;
+  }
+  .stepper__link,
+  .stepper__static {
+    @apply flex items-center gap-2 px-2 py-1;
+  }
+  .stepper__link {
+    @apply rounded-xl hover:bg-amber-500/10 transition-colors;
+  }
+  .stepper__link:hover {
+    @apply no-underline;
+  }
+  .stepper__link:focus-visible {
+    @apply ring-2 ring-amber-500;
+  }
+  .stepper__dot {
+    @apply grid h-6 w-6 shrink-0 place-items-center rounded-full border-2 font-mono text-xs font-black shadow-sm transition-all;
+  }
+  .stepper__dot--done {
+    @apply border-emerald-500 bg-emerald-500 text-white shadow-emerald-500/20;
+  }
+  .stepper__dot--now {
+    @apply border-amber-400 bg-gradient-to-r from-cyber-gold to-amber-500 text-gray-950 font-black shadow-amber-500/30 scale-110;
+  }
+  .stepper__dot--todo {
+    @apply border-gray-300 bg-gray-100 text-gray-400;
+  }
+  .stepper__check {
+    @apply h-3.5 w-3.5 text-white;
+  }
+  .stepper__label {
+    @apply whitespace-nowrap text-xs uppercase tracking-wider font-mono;
+  }
+  .stepper__label--done {
+    @apply text-emerald-700 font-extrabold;
+  }
+  .stepper__label--now {
+    @apply font-black text-amber-900 font-mono tracking-widest text-xs;
+  }
+  .stepper__label--todo {
+    @apply text-gray-400 font-medium;
+  }
+  .stepper__line {
+    @apply h-0.5 w-6 sm:w-12 shrink-0 bg-gray-200 rounded-full;
+  }
+}

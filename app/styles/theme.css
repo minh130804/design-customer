@@ -1,0 +1,197 @@
+/* ============================================================
+   TOKEN — @theme + keyframes
+   Nguồn số liệu: CSS sản xuất của Etsy (Collage).
+   Cách lấy: document/05-nghien-cuu-doi-thu/etsy-product-page.md
+   Ở dự án thật khối này do @pod/tokens sinh bằng Style Dictionary.
+
+   Tệp này KHÔNG tự import "tailwindcss" — nó được nạp từ app/globals.css,
+   entry duy nhất. Xem css-bundle.md.
+   ============================================================ */
+@theme {
+  /* ============================================================
+     ĐIỂM NGẮT — trích từ CSS sản xuất của Etsy (Collage)
+     Nguồn: figma/research/bundle1.css · bundle2.css · collage-shadow.css
+
+     Đếm số lần mỗi `min-width` xuất hiện trong 1.6 MB CSS đó:
+
+       480px  47 lần      640px  233 lần     900px  56 lần
+       1200px 43 lần      1400px 30 lần      1600px  1 lần
+
+     Ánh xạ sang tên hậu tố của Collage, xác nhận bằng cách xem lớp nào nằm
+     trong media query nào (`.wt-*-md` chỉ xuất hiện từ 640px trở lên…):
+
+       xs  = mặc định      sm = 480px       md = 640px
+       lg  = 900px         xl = 1200px      tv = 1400px (bề rộng trang tối đa)
+
+     ── Vì sao KHÔNG giữ thang mặc định của Tailwind ─────────────────────
+     Tailwind mặc định 640·768·1024·1280·1536. Hai chỗ lệch quan trọng:
+
+     · Etsy có bậc 480px, Tailwind không. Đó là ranh giới điện thoại nhỏ ↔
+       điện thoại lớn, và trên sàn nó là chỗ lưới hàng đổi từ 2 sang 3 cột.
+     · Etsy nhảy 640 → 900, Tailwind chèn 768 rồi 1024. 900px là bề rộng mà
+       bố cục hai cột (ảnh + hộp mua) vừa đủ chỗ; ở 768 thì cột phải bị bóp
+       tới mức phải xuống dòng, còn đợi tới 1024 là bỏ phí máy tính bảng.
+
+     Đổi ở đây là đổi cho TOÀN BỘ tiền tố `sm: md: lg: xl: 2xl:` trong mã.
+     ============================================================ */
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 640px;
+  --breakpoint-lg: 900px;
+  --breakpoint-xl: 1200px;
+
+  /* Không khai `--breakpoint-2xl`. Bậc 1400px của Etsy (`tv`) là TRẦN BỀ RỘNG
+     của trang, không phải mốc đổi bố cục: qua 1400px thì container ngừng nở và
+     chỉ còn lề hai bên rộng ra, nên không có gì để sắp xếp lại. Nó sống ở
+     `--container-page` bên dưới. Bỏ luôn tiền tố `2xl:` để không ai vô tình
+     dùng bậc 1536px mặc định của Tailwind — con số nằm ngoài thang này.
+
+     Thang bề rộng container, cùng nguồn: `.wt-max-width-{sm,md,lg,xl,tv}`.
+     Chỉ khai hai bậc thực sự dùng — thêm bậc chưa ai gọi là mã chết. */
+  --container-page: 1400px; /* wt-max-width-tv  · vỏ marketplace */
+  --container-focus: 900px; /* wt-max-width-lg  · checkout, trang tập trung */
+
+  /* ── nền và mặt ─────────────────────────────────────── */
+  /* Nền trang — kem rất nhạt, KHÔNG phải trắng.
+     `#faf8f5` là biến thể ấm của `--clg-color-pal-greyscale-050` trong bảng màu
+     Collage (bảng đó có hai bản 050: `#f7f7f7` trung tính và `#faf8f5` ấm), và
+     có hẳn một chủ đề dùng `background-surface-primary: greyscale-050` thay vì
+     `greyscale-000`.
+
+     Vì sao đáng đổi: `--color-surface` của thẻ là `#ffffff`. Nền trang cũng
+     trắng thì thẻ, hộp mua và ô nhập chỉ còn cái viền `#dbdbdb` để tách khỏi
+     trang — mất viền là mất luôn ranh giới. Lùi nền xuống một bậc thì mọi bề
+     mặt trắng tự nổi lên mà không cần thêm bóng. */
+  --color-canvas:        #f1f5f9;
+  --color-surface:       #ffffff;
+  --color-surface-2:     #f8fafc;
+  --color-surface-3:     #e2e8f0;   /* sem-background-surface-informational-subtle */
+  --color-trust:         #fef3c7;   /* sem-background-surface-trust-subtle */
+
+  /* ── Custom Palette from User Screenshot (Strictly Defined in RGB Scale) ──── */
+  /* #8A9DB1 = rgb(138, 157, 177) | #837D68 = rgb(131, 125, 104) | #ECC5C6 = rgb(236, 197, 198) | #F5E9E7 = rgb(245, 233, 231) | #C1C0C2 = rgb(193, 192, 194) */
+  --color-nav-dark:      rgb(138, 157, 177);
+  --color-nav-sub:       rgb(131, 125, 104);
+  --color-cyber-gold:    rgb(236, 197, 198);
+  --color-cyber-amber:   rgb(245, 233, 231);
+  --color-neon-purple:   rgb(193, 192, 194);
+  --color-electric-blue: rgb(236, 197, 198);
+  --color-crimson:       rgb(225, 29, 72);
+  --color-emerald-glow:  rgb(16, 185, 129);
+  --color-amazon-gold:   rgb(236, 197, 198);
+  --color-amazon-gold-hover: rgb(138, 157, 177);
+  --color-amazon-orange: rgb(236, 197, 198);
+  --color-amazon-orange-hover: rgb(131, 125, 104);
+  --color-amazon-red:    rgb(225, 29, 72);
+  --color-amazon-link:   rgb(138, 157, 177);
+  --color-prime:         rgb(138, 157, 177);
+
+  /* ── chữ ────────────────────────────────────────────── */
+  --color-ink:           #222222;   /* sem-text-primary        · 15.9:1 */
+  --color-copy:          #3e3e3e;   /* KHONG dat ten "body": se dung voi --text-body */
+  --color-muted:         #595959;   /* sem-text-secondary      ·  7.0:1 */
+  /* Đậm hơn `#757575` của Collage một bậc, và đây là hệ quả bắt buộc của việc
+     đổi nền trang sang `#faf8f5`: trên nền trắng thì `#757575` đạt 4.6:1, nhưng
+     trên nền kem nó tụt còn 4.3:1 — dưới ngưỡng 4.5:1 của WCAG AA cho chữ nhỏ,
+     mà token này chuyên dùng cho chú thích. `#707070` cho 4.74:1. */
+  --color-faint:         #707070;   /* sem-text-tertiary, đã chỉnh · 4.74:1 trên nền kem */
+  --color-on-dark:       #ffffff;   /* sem-text-on-surface-strong */
+
+  /* ── nút · ĐEN, không phải cam ──────────────────────── */
+  --color-btn:           #222222;   /* app-button-primary-background */
+  --color-btn-hover:     #2f2f2f;   /* …hovered */
+  --color-btn-active:    #595959;   /* …pressed */
+
+  /* Cam là màu thương hiệu và nhãn khuyến mại, KHÔNG phải màu nút.
+     Trắng trên #f1641e chỉ đạt 3.19:1 — không bao giờ đặt chữ trắng lên nó. */
+  --color-brand:         #f1641e;
+  --color-brand-soft:    #fff3e7;
+
+  /* ── viền ───────────────────────────────────────────── */
+  --color-line:          #dbdbdb;
+  --color-line-strong:   #222222;   /* viền nút phụ, 1.5px */
+
+  /* ── màu mang nghĩa ─────────────────────────────────── */
+  --color-critical:      #9a0027;   /* sem-text-critical  · "In 20+ carts" */
+  --color-money:         #0f743b;   /* sem-text-monetary-value · giảm giá */
+  --color-action:        #3b67d9;   /* sem-text-link */
+  /* Sao đánh giá màu vàng. Etsy dùng đen `#222` để sao không cạnh tranh chú ý
+     với giá và nút mua; ở đây chọn ngược lại vì vàng là quy ước sao đánh giá mà
+     người mua đọc được ngay không cần nghĩ.
+
+     `#f0a500` chứ không phải vàng tươi: đây là sắc vàng đậm nhất còn đọc ra là
+     "vàng" trên nền trắng. Nói thẳng là không sắc vàng nào đạt 3:1 với nền
+     trắng — đó chính là lý do Etsy dùng đen. Ở đây chấp nhận được vì sao KHÔNG
+     phải nơi duy nhất chở thông tin: `StarRating` luôn kèm `<span class="sr-only">
+     4.8 out of 5 stars</span>` và số lượt đánh giá hiện ngay cạnh.
+
+     Cũng cố tình lệch khỏi `--color-brand` (#f1641e, sắc độ ~22°): vàng này ở
+     ~41°, đủ xa để sao không bị đọc nhầm thành thành phần thương hiệu. */
+  --color-star:          #f0a500;
+
+  /* Nền nhạt đi kèm ba màu trên. Phải là TOKEN chứ không phải mã hex rải rác
+     trong JSX: `bg-[#ffdde6]` xuất hiện ở bốn file là bốn cơ hội để một chỗ gõ
+     sai một chữ số và không ai thấy. */
+  --color-money-soft:    #f2fbee;   /* green-150 */
+  --color-ok:            #a0e193;   /* green-350 · nền pill "đã giao" */
+  --color-critical-soft: #ffdde6;   /* red-300 */
+
+  /* Shop uy tín — token riêng của Etsy (`sem-text-star-seller`). Một hệ thống
+     nâng "người bán uy tín" lên thành token ngữ nghĩa là hệ thống của một cái
+     chợ, không phải của một cửa hàng. */
+  --color-star-seller:      #9560b8;   /* lavender-300 */
+  --color-star-seller-soft: #e6e1f0;
+
+  /* ── ba loại hàng · Etsy không có, hệ mình bắt buộc ─── */
+  --color-kind-stock:    #2f766d;   --color-kind-stock-bg: #dff3ee;
+  --color-kind-pod:      #614db1;   --color-kind-pod-bg:   #eee1ff;
+  --color-kind-file:     #3b67d9;   --color-kind-file-bg:  #eef8ff;
+
+  /* ── khoảng cách · cơ sở 6px của Collage ────────────── */
+  /* p-1=6 · p-2=12 · p-3=18 (đệm ngang nút) · p-4=24 */
+  --spacing: 6px;
+
+  /* ── bo góc ────────────────────────────────────────── */
+  --radius-pill: 24px;   /* shape-app-button-border-radius — MỌI nút */
+  --radius-base: 4px;    /* shape-sem-border-radius */
+  --radius-card: 8px;
+  /* Chỉ cho BỀ MẶT LỚN: ảnh chính trang sản phẩm, hộp mua. Bo 16px trên một
+     thẻ nhỏ ăn mất khoảng đệm ở góc; trên một khối 600px thì nó vừa phải. */
+  --radius-lg:   16px;
+
+  /* ── đổ bóng hai lớp: tiếp xúc + khuếch tán ────────── */
+  --shadow-elev-1: 0 1px 2px 0 rgb(0 0 0 / .12), 0 1px 3px 1px rgb(0 0 0 / .06);
+  --shadow-elev-2: 0 1px 2px 0 rgb(0 0 0 / .12), 0 2px 6px 2px rgb(0 0 0 / .06);
+  --shadow-elev-3: 0 1px 3px 0 rgb(0 0 0 / .14), 0 4px 8px 3px rgb(0 0 0 / .07);
+  --shadow-elev-4: 0 1px 5px 0 rgb(0 0 0 / .16), 0 5px 20px 6px rgb(0 0 0 / .08);
+
+  /* ── chữ ────────────────────────────────────────────
+     Serif CHỈ dùng cho wt-text-heading. Tiêu đề khối trong
+     trang listing là sans 16px/500 — xem §2 của tài liệu.   */
+  --font-sans:  'Inter', 'Graphik Webfont', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Noto Serif', 'Guardian-EgypTT', Charter, Cambria, Georgia, serif;
+
+  /* cỡ lẻ (27.01, 12.99…) là số thật trong CSS Etsy, không làm tròn */
+  --text-heading:    31.01px; --text-heading--line-height:    1.1;
+  --text-price:      27.01px; --text-price--line-height:      1.3;
+  --text-title-lg:   19.01px; --text-title-lg--line-height:   1.4;
+  --text-title:      16px;    --text-title--line-height:      1.25;
+  --text-title-sm:   12.99px; --text-title-sm--line-height:   1.4;
+  --text-body:       16px;    --text-body--line-height:       1.7;
+  --text-body-sm:    12.99px; --text-body-sm--line-height:    1.4;
+  --text-caption:    12.99px; --text-caption--line-height:    1.4;
+
+  /* ── animation cho accordion ────────────────────────
+     `height: auto` không animate được, nên Radix đo nội dung rồi phát ra
+     biến CSS --radix-accordion-content-height cho keyframe dùng.       */
+  --animate-accordion-down: accordion-down .2s ease-out;
+  --animate-accordion-up:   accordion-up   .2s ease-out;
+}
+
+@keyframes accordion-down {
+  from { height: 0 }
+  to   { height: var(--radix-accordion-content-height) }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height) }
+  to   { height: 0 }
+}

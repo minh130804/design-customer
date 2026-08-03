@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200">
+  <defs>
+    <pattern id="weave" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#232323"/>
+      <rect width="4" height="4" fill="#2b2b2b"/>
+      <rect x="4" y="4" width="4" height="4" fill="#2b2b2b"/>
+    </pattern>
+    <pattern id="ink" width="6" height="6" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" fill="#efe9db"/>
+      <circle cx="1.5" cy="1.5" r="1.1" fill="#e2d9c4"/>
+      <circle cx="4.5" cy="4.5" r=".9" fill="#e6ddca"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="1200" fill="url(#weave)"/>
+
+  <!-- sợi vải, chỉ thấy rõ khi phóng to -->
+  <g stroke="#333" stroke-width=".6" opacity=".5">
+    <path d="M0 40 H1200 M0 80 H1200 M0 120 H1200 M0 160 H1200 M0 200 H1200 M0 240 H1200
+             M0 280 H1200 M0 320 H1200 M0 360 H1200 M0 400 H1200 M0 440 H1200 M0 480 H1200
+             M0 520 H1200 M0 560 H1200 M0 600 H1200 M0 640 H1200 M0 680 H1200 M0 720 H1200
+             M0 760 H1200 M0 800 H1200 M0 840 H1200 M0 880 H1200 M0 920 H1200 M0 960 H1200
+             M0 1000 H1200 M0 1040 H1200 M0 1080 H1200 M0 1120 H1200 M0 1160 H1200"/>
+  </g>
+
+  <!-- mực in, có hạt -->
+  <g transform="translate(600 540) scale(2.6)">
+    <path d="M0 -110 C 52 -58 52 30 0 88 C -52 30 -52 -58 0 -110 Z"
+          fill="none" stroke="url(#ink)" stroke-width="7"/>
+    <path d="M0 88 C -60 40 -118 40 -150 -6 C -96 -34 -40 -14 0 30"
+          fill="none" stroke="url(#ink)" stroke-width="7"/>
+    <path d="M0 88 C 60 40 118 40 150 -6 C 96 -34 40 -14 0 30"
+          fill="none" stroke="url(#ink)" stroke-width="7"/>
+  </g>
+
+  <!-- chi tiết chỉ đọc được khi phóng — lý do bộ xem ảnh phải có zoom -->
+  <g font-family="Inter, system-ui, sans-serif" fill="#cfc7b4">
+    <text x="60" y="1090" font-size="15">DTG · water-based ink · 1200 × 1200 dpi head</text>
+    <text x="60" y="1116" font-size="11" opacity=".85">
+      Ink cures INTO the fibre — it does not sit on top, so the print stays soft and will not crack along fold lines.
+    </text>
+    <text x="60" y="1138" font-size="11" opacity=".7">
+      Fabric: 180 g/m² combed ring-spun cotton · single jersey · pre-shrunk
+    </text>
+  </g>
+</svg>

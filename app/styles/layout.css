@@ -1,0 +1,366 @@
+/* ============================================================
+   BEM · Cyber-Lux Titan Header & Grand Layout Styling
+   Nạp từ app/globals.css (entry duy nhất).
+   ============================================================ */
+
+@layer components {
+  /* ── search-bar ───────────────────────────────────────── */
+  .search-bar {
+    @apply flex h-11 items-center rounded-full bg-white border border-gray-300 transition-all duration-200 shadow-sm overflow-hidden;
+  }
+  .search-bar:focus-within {
+    @apply ring-2 ring-[#ECC5C6] border-[#ECC5C6] shadow-md;
+  }
+  .search-bar__select {
+    @apply h-11 rounded-l-full bg-gray-50 text-xs font-bold text-gray-800 px-4 border-r border-gray-200 outline-none cursor-pointer hover:bg-gray-100 transition-colors shrink-0;
+  }
+  .search-bar__input {
+    @apply min-w-0 flex-1 h-11 bg-white px-4 text-xs font-medium text-gray-900 outline-none;
+  }
+  .search-bar__input::placeholder {
+    @apply text-gray-400 font-normal;
+  }
+  .search-bar__submit {
+    @apply grid h-11 w-13 shrink-0 place-items-center rounded-r-full bg-[#ECC5C6] text-gray-950 outline-none transition-all cursor-pointer font-bold hover:brightness-105 active:scale-95;
+  }
+  .search-bar__submit:focus-visible {
+    @apply ring-2 ring-[#ECC5C6] ring-offset-1;
+  }
+
+  /* ── icon-tip ─────────────────────────────────────────── */
+  .icon-tip {
+    @apply relative inline-flex;
+  }
+  .icon-tip__bubble {
+    @apply pointer-events-none absolute left-1/2 top-full z-40 mt-1.5 -translate-x-1/2;
+    @apply whitespace-nowrap rounded-md bg-gray-900 border border-gray-700 px-2.5 py-1 text-caption font-bold text-white shadow-xl;
+    @apply opacity-0 transition-opacity duration-150;
+  }
+  .icon-tip:hover .icon-tip__bubble,
+  .icon-tip:focus-within .icon-tip__bubble {
+    @apply opacity-100;
+  }
+
+  /* ── basket-nudge ─────────────────────────────────────── */
+  .basket-nudge {
+    @apply fixed right-3 top-[108px] z-40 w-[min(92vw,330px)];
+    @apply rounded-xl border border-gray-200 bg-white p-3.5 shadow-2xl;
+  }
+  .basket-nudge__head {
+    @apply flex items-start gap-2.5;
+  }
+  .basket-nudge__icon {
+    @apply grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-amber-100 text-amber-900 font-bold;
+  }
+  .basket-nudge__title {
+    @apply flex-1 text-title-sm font-bold text-ink;
+  }
+  .basket-nudge__close {
+    @apply -mr-1 -mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full text-gray-400 outline-none transition-colors;
+  }
+  .basket-nudge__close:hover {
+    @apply bg-gray-100 text-ink;
+  }
+
+  /* ── notify ───────────────────────────────────────────── */
+  .notify {
+    @apply relative;
+  }
+  .notify__dot {
+    @apply absolute right-1 top-1 h-2.5 w-2.5 rounded-full bg-crimson ring-2 ring-nav-dark animate-pulse;
+  }
+  .notify__panel {
+    @apply absolute right-0 top-full z-40 mt-2 w-[min(92vw,350px)] overflow-hidden;
+    @apply rounded-xl border border-gray-200 bg-white shadow-2xl text-ink;
+  }
+
+  /* ── site-header · Header System ─────────── */
+  .site-header {
+    @apply sticky top-0 z-40 w-full shadow-2xl;
+  }
+  .site-header__top {
+    @apply bg-white text-gray-900 border-b border-gray-200 backdrop-blur-md;
+  }
+  .site-header__inner {
+    @apply mx-auto flex md:grid md:grid-cols-[auto_1fr_auto] h-14 md:h-16 max-w-page items-center justify-between gap-3 px-3 sm:px-5;
+  }
+
+  /* Logo Crest */
+  .site-header__logo {
+    @apply flex items-center gap-2.5 shrink-0 outline-none transition-all hover:scale-105;
+  }
+  .site-header__logo-crest {
+    @apply h-9 w-9 rounded-lg bg-gradient-to-br from-cyber-gold via-amber-500 to-neon-purple p-0.5 shadow-md grid place-items-center;
+  }
+  .site-header__logo-sparkle {
+    @apply h-5 w-5 text-gray-950 font-extrabold;
+  }
+  .site-header__logo-brand {
+    @apply flex flex-col leading-tight;
+  }
+  .site-header__logo-main {
+    @apply text-lg font-black tracking-tight text-gray-900 font-mono;
+  }
+  .site-header__logo-sub {
+    @apply text-[9px] font-extrabold text-gray-600 tracking-widest uppercase;
+  }
+
+  .site-header__deliver {
+    @apply hidden lg:flex items-center gap-2 text-xs text-gray-700 cursor-pointer p-1.5 rounded-lg border border-transparent hover:border-gray-300 hover:bg-gray-100 transition-all;
+  }
+  .site-header__deliver-icon {
+    @apply h-4.5 w-4.5 text-[#ECC5C6] shrink-0;
+  }
+  .site-header__deliver-text {
+    @apply flex flex-col leading-tight;
+  }
+  .site-header__deliver-label {
+    @apply text-[10px] text-gray-500 uppercase tracking-wider;
+  }
+  .site-header__deliver-value {
+    @apply font-bold text-gray-900 text-xs;
+  }
+  .site-header__search {
+    @apply w-full max-w-[620px] justify-self-center hidden sm:block;
+  }
+  .site-header__search-icon {
+    @apply h-5 w-5 text-gray-950 font-bold;
+  }
+  .site-header__actions {
+    @apply flex shrink-0 items-center gap-2.5 text-gray-900;
+  }
+
+  /* VIP Badge */
+  .site-header__vip {
+    @apply hidden xl:flex items-center gap-1.5 bg-gray-100 border border-gray-300 text-gray-800 px-2.5 py-1 rounded-full text-[10px] font-black tracking-wider shadow-xs;
+  }
+  .site-header__vip-icon {
+    @apply h-3.5 w-3.5 text-amber-600;
+  }
+
+  .site-header__lang {
+    @apply hidden md:flex items-center gap-1 text-xs font-bold text-gray-700 cursor-pointer p-1.5 rounded-md border border-transparent hover:border-gray-300 hover:text-gray-900 transition-all;
+  }
+  .site-header__lang-code {
+    @apply uppercase text-xs font-bold;
+  }
+  .site-header__lang-chevron {
+    @apply h-3.5 w-3.5 text-gray-400;
+  }
+  .site-header__link-icon {
+    @apply p-2 rounded-full border border-transparent hover:border-gray-300 hover:bg-gray-100 text-gray-800 flex items-center justify-center transition-all;
+  }
+  .site-header__icon {
+    @apply h-5 w-5 text-gray-800;
+  }
+
+  .site-header__cart {
+    @apply inline-flex items-center gap-1.5 h-8.5 px-3 rounded-full bg-[#ECC5C6] text-gray-950 font-extrabold text-xs border border-white/60 shadow-xs hover:brightness-105 active:scale-95 transition-all cursor-pointer shrink-0;
+  }
+  .site-header__cart-wrapper {
+    @apply relative flex items-center justify-center;
+  }
+  .site-header__cart-icon {
+    @apply h-4 w-4 text-gray-950 shrink-0;
+  }
+  .site-header__cart-count {
+    @apply bg-gray-950 text-white text-[10px] font-mono font-black h-4 w-4 inline-flex items-center justify-center rounded-full ml-0.5 shrink-0;
+  }
+  .site-header__cart-label {
+    @apply hidden sm:inline font-bold text-gray-950 text-xs;
+  }
+
+  /* Sub-Navigation Speedbar */
+  .site-header__subnav {
+    @apply bg-[#081726] text-white text-xs font-semibold h-10 flex items-center border-t border-gray-800/80 shadow-sm;
+  }
+  .site-header__subnav-links {
+    @apply flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 flex-1;
+  }
+  .site-header__subnav-item {
+    @apply flex items-center gap-1.5 px-2.5 py-1 rounded-md whitespace-nowrap transition-all duration-200 text-xs font-bold tracking-wide cursor-pointer;
+  }
+  .site-header__subnav-promo {
+    @apply hidden xl:flex items-center gap-1.5 text-xs font-bold text-cyan-300 ml-auto truncate pl-3 tracking-wide;
+  }
+
+  /* ── amazon-drawer ───────────────────────────────────── */
+  .amazon-drawer {
+    @apply shrink-0;
+  }
+  .amazon-drawer__trigger {
+    @apply flex items-center gap-2 text-gray-950 font-black px-4 py-1.5 rounded-full bg-[#ECC5C6] border border-white/60 shadow-md hover:brightness-105 cursor-pointer mr-3 transition-all text-xs tracking-wider uppercase border-none;
+  }
+  .amazon-drawer__trigger-icon {
+    @apply h-4.5 w-4.5 text-gray-950 font-bold;
+  }
+  .amazon-drawer__trigger-label {
+    @apply font-black text-[11px] text-gray-950 tracking-wider;
+  }
+  .amazon-drawer__overlay {
+    @apply fixed inset-0 z-50 flex;
+  }
+  .amazon-drawer__backdrop {
+    @apply fixed inset-0 bg-black/75 backdrop-blur-xs;
+  }
+  .amazon-drawer__content {
+    @apply relative z-10 w-[380px] max-w-[88vw] h-full bg-white shadow-2xl flex flex-col overflow-y-auto animate-in slide-in-from-left duration-200 text-ink;
+  }
+  .amazon-drawer__close-btn {
+    @apply absolute top-4 right-4 text-gray-400 hover:text-white p-1.5 rounded-full bg-gray-900 hover:bg-gray-800 cursor-pointer transition-colors z-20;
+  }
+  .amazon-drawer__close-icon {
+    @apply h-4.5 w-4.5;
+  }
+  .amazon-drawer__header {
+    @apply bg-gradient-to-r from-[#06131e] via-[#0a1c2a] to-[#0f293d] text-white p-5 flex items-center gap-3.5 border-b border-cyan-950;
+  }
+  .amazon-drawer__avatar {
+    @apply h-11 w-11 rounded-full bg-gradient-to-tr from-cyan-500 to-teal-500 p-0.5 grid place-items-center shadow-lg shrink-0;
+  }
+  .amazon-drawer__crown-icon {
+    @apply h-6 w-6 text-gray-950 font-bold;
+  }
+  .amazon-drawer__user-info {
+    @apply flex flex-col leading-tight;
+  }
+  .amazon-drawer__greeting {
+    @apply text-xs font-black text-white tracking-wider font-mono;
+  }
+  .amazon-drawer__status {
+    @apply text-[10px] font-extrabold text-cyber-gold uppercase tracking-widest mt-0.5;
+  }
+
+  .amazon-drawer__promo {
+    @apply bg-gradient-to-r from-amber-500/10 via-amber-500/15 to-transparent border border-amber-500/30 p-3 rounded-xl flex items-center gap-3 mb-4;
+  }
+  .amazon-drawer__promo-icon {
+    @apply h-6 w-6 text-amber-500 shrink-0 animate-pulse;
+  }
+  .amazon-drawer__promo-title {
+    @apply text-xs font-black text-amber-900 tracking-wide font-mono;
+  }
+  .amazon-drawer__promo-sub {
+    @apply text-[11px] font-semibold text-gray-600;
+  }
+
+  .amazon-drawer__body {
+    @apply p-5 space-y-4;
+  }
+  .amazon-drawer__section-title {
+    @apply text-xs font-black text-gray-900 mb-2.5 uppercase tracking-wider text-cyber-gold font-mono;
+  }
+  .amazon-drawer__list {
+    @apply space-y-1 text-xs;
+  }
+  .amazon-drawer__item {
+    @apply flex items-center gap-2.5 p-2.5 rounded-lg hover:bg-gray-100 text-gray-800 hover:text-ink transition-colors font-bold text-xs;
+  }
+  .amazon-drawer__item-icon {
+    @apply h-4 w-4 shrink-0;
+  }
+  .amazon-drawer__cat-icon {
+    @apply h-4.5 w-4.5 shrink-0;
+  }
+  .amazon-drawer__item--between {
+    @apply justify-between;
+  }
+
+  .amazon-drawer__dept-group {
+    @apply rounded-lg overflow-hidden;
+  }
+  .amazon-drawer__dept-row {
+    @apply flex items-center justify-between hover:bg-gray-100 rounded-lg pr-2;
+  }
+  .amazon-drawer__expand-btn {
+    @apply p-1.5 rounded-md hover:bg-gray-200 text-gray-400 hover:text-ink transition-colors cursor-pointer;
+  }
+  .amazon-drawer__expand-icon {
+    @apply h-4 w-4;
+  }
+  .amazon-drawer__sublist {
+    @apply pl-9 pr-2 py-1 space-y-1 bg-gray-50/80 rounded-b-lg border-l-2 border-amber-400 my-1;
+  }
+  .amazon-drawer__subitem {
+    @apply flex items-center gap-1.5 py-1.5 text-xs text-gray-700 hover:text-amber-600 font-semibold transition-colors;
+  }
+  .amazon-drawer__subchevron {
+    @apply h-3 w-3 text-gray-400;
+  }
+
+  .amazon-drawer__divider {
+    @apply my-4 border-b border-gray-200/80;
+  }
+
+  /* ── account-menu ─────────────────────────────────────── */
+  .account-menu {
+    @apply relative;
+  }
+  .account-menu__signin {
+    @apply hidden sm:inline-flex text-xs font-black bg-[#ECC5C6] text-gray-950 px-4 py-1.5 rounded-full border border-white/60 shadow-md hover:brightness-105 transition-all uppercase tracking-wider;
+  }
+  .account-menu__name {
+    @apply hidden sm:block max-w-[130px] truncate text-xs font-bold text-gray-800 p-1.5 px-3 rounded-full border border-gray-300 hover:bg-gray-100 cursor-pointer;
+  }
+
+  /* ── breadcrumbs ──────────────────────────────────────── */
+  .breadcrumbs__list {
+    @apply flex flex-wrap items-center gap-1 text-caption text-muted;
+  }
+  .breadcrumbs__item {
+    @apply flex items-center gap-1;
+  }
+
+  /* ── site-footer · Grand Multi-Column Footer ─────────── */
+  .site-footer {
+    @apply bg-nav-sub text-white mt-16 w-full border-t border-gray-800;
+  }
+  .site-footer__back-to-top {
+    @apply w-full bg-gradient-to-r from-gray-900 via-nav-sub to-gray-900 hover:from-gray-800 hover:to-gray-800 text-xs font-extrabold py-3.5 text-center flex items-center justify-center gap-2 text-cyber-gold tracking-widest uppercase transition-all cursor-pointer border-b border-gray-800;
+  }
+  .site-footer__back-icon {
+    @apply h-4 w-4 text-cyber-gold;
+  }
+  .site-footer__main {
+    @apply py-12 border-b border-gray-800 bg-nav-sub;
+  }
+  .site-footer__grid {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-8 text-xs max-w-page mx-auto px-4;
+  }
+  .site-footer__col-title {
+    @apply font-black text-sm text-white mb-4 uppercase tracking-wider text-cyber-gold font-mono;
+  }
+  .site-footer__list {
+    @apply space-y-2.5 text-gray-300 font-medium;
+  }
+  .site-footer__list a:hover {
+    @apply text-white underline;
+  }
+  .site-footer__brand-bar {
+    @apply py-6 bg-nav-dark border-b border-gray-900 text-xs;
+  }
+  .site-footer__brand-inner {
+    @apply flex flex-col sm:flex-row items-center justify-between gap-4 max-w-page mx-auto px-4;
+  }
+  .site-footer__logo {
+    @apply font-black text-xl text-white tracking-wider font-mono;
+  }
+  .site-footer__selectors {
+    @apply flex flex-wrap items-center gap-3;
+  }
+  .site-footer__selector-btn {
+    @apply border border-gray-800 hover:border-gray-600 bg-gray-900 text-gray-300 px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-semibold transition-all cursor-pointer;
+  }
+  .site-footer__bottom {
+    @apply py-6 bg-[#05080e] text-[11px] text-gray-400 text-center space-y-2;
+  }
+  .site-footer__legal {
+    @apply flex flex-wrap justify-center gap-5 text-gray-400 mb-2 font-semibold;
+  }
+  .site-footer__legal a:hover {
+    @apply text-white underline;
+  }
+  .site-footer__copy {
+    @apply text-gray-500 text-[11px];
+  }
+}

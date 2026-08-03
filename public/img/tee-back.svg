@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200">
+  <rect width="1200" height="1200" fill="#efefec"/>
+  <g fill="#262626">
+    <path d="M420 250 L520 214 Q600 250 680 214 L780 250 L860 330 L800 400 L760 370 L760 980 Q600 1010 440 980 L440 370 L400 400 L340 330 Z"/>
+  </g>
+  <g stroke="#3d3d3d" stroke-width="2" fill="none" opacity=".7">
+    <path d="M500 236 Q600 268 700 236"/>
+    <path d="M448 372 L448 970"/><path d="M752 372 L752 970"/>
+  </g>
+  <g transform="translate(600 470)" fill="none" stroke="#e8e2d4" stroke-width="3">
+    <circle cx="0" cy="0" r="34"/>
+    <path d="M0 -22 C 14 -10 14 8 0 20 C -14 8 -14 -10 0 -22 Z"/>
+  </g>
+  <text x="600" y="536" text-anchor="middle" font-family="Georgia, serif" font-size="19"
+        letter-spacing="6" fill="#cfc9ba">LOTUS STUDIO</text>
+  <text x="600" y="1140" text-anchor="middle" font-family="Inter, system-ui, sans-serif"
+        font-size="26" fill="#8a8578">Back view · small neck logo only</text>
+</svg>
