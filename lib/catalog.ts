@@ -1229,12 +1229,12 @@ export function categoryChildTiles(path: string[]): CategoryTile[] {
   const [siblings, base] = node.children?.length
     ? [node.children, path]
     : [
-        (trail.length > 1
-          ? (trail[trail.length - 2]!.children ?? [])
-          : CATEGORY_TREE
-        ).filter((n) => n.slug !== node.slug),
-        parentPath,
-      ];
+      (trail.length > 1
+        ? (trail[trail.length - 2]!.children ?? [])
+        : CATEGORY_TREE
+      ).filter((n) => n.slug !== node.slug),
+      parentPath,
+    ];
 
   return siblings
     .map((child) => tileFor([...base, child.slug], child.label))

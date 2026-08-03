@@ -1,12 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Route } from 'next';
-import { Eye, Sparkles } from 'lucide-react';
+import { Eye, Sparkles, Heart } from 'lucide-react';
 import { Money } from '@/components/shared/money';
 import { StarRating } from '@/components/product/star-rating';
 import type { Listing } from '@/lib/catalog';
+import { cn } from '@/lib/utils';
 
 type ShelfCardProps = {
   listing: Listing;
@@ -15,8 +17,35 @@ type ShelfCardProps = {
 };
 
 export function ShelfCard({ listing, priority, onQuickView }: ShelfCardProps) {
+  const [wishlisted, setWishlisted] = useState(false);
+  const [heartAnimating, setHeartAnimating] = useState(false);
+
   const isBestSeller = listing.rating >= 4.8;
   const isLimitedDeal = Boolean(listing.compareAtCents && listing.compareAtCents > listing.priceCents);
+  const isNewItem = listing.rating >= 4.5 && listing.reviewCount < 50;
+
+  const handleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setWishlisted((prev) => !prev);
+    setHeartAnimating(true);
+    setTimeout(() => setHeartAnimating(false), 400);
+  };
+
+  /* Ribbon text — chỉ hiện một loại, ưu tiên SALE > NEW > PREMIUM */
+  const ribbonText = isLimitedDeal
+    ? 'SALE'
+    : isNewItem
+    ? 'NEW'
+    : isBestSeller
+    ? 'TOP'
+    : null;
+
+  const ribbonMod = isLimitedDeal
+    ? 'shelf-card__ribbon--sale'
+    : isNewItem
+    ? 'shelf-card__ribbon--new'
+    : 'shelf-card__ribbon--top';
 
   return (
     <li className="shelf__item">
@@ -34,9 +63,30 @@ export function ShelfCard({ listing, priority, onQuickView }: ShelfCardProps) {
             />
           </Link>
 
+          {/* Corner Ribbon Badge */}
+          {ribbonText && (
+            <span className={`shelf-card__ribbon ${ribbonMod}`}>
+              {ribbonText}
+            </span>
+          )}
+
           {isBestSeller && (
             <span className="shelf-card__badge-bestseller">🏆 #1 TOP SELLER</span>
           )}
+
+          {/* Wishlist Heart Button */}
+          <button
+            type="button"
+            onClick={handleWishlist}
+            className={cn(
+              'shelf-card__heart-btn',
+              wishlisted && 'shelf-card__heart-btn--active',
+              heartAnimating && 'shelf-card__heart-btn--animating',
+            )}
+            aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+          >
+            <Heart className="shelf-card__heart-icon" />
+          </button>
 
           {onQuickView && (
             <button

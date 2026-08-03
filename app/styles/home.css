@@ -18,7 +18,37 @@
   }
 
   .hero-banner {
-    @apply relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#8A9DB1] via-[#837D68] to-gray-900 text-white pt-12 pb-44 px-6 sm:px-12 border border-white/20 shadow-2xl;
+    @apply relative overflow-hidden rounded-3xl text-white pt-12 pb-44 px-6 sm:px-12 border border-white/20 shadow-2xl;
+    background: linear-gradient(-45deg, #8A9DB1, #837D68, #7a6e5a, #8A9DB1, #6b7d91);
+    background-size: 400% 400%;
+    animation: gradient-shift 8s ease infinite;
+  }
+  .hero-banner__shimmer {
+    @apply pointer-events-none absolute inset-0 z-[1];
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgba(236, 197, 198, 0.15) 45%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(236, 197, 198, 0.15) 55%,
+      transparent 60%
+    );
+    animation: shimmer-sweep 3s ease-in-out infinite;
+  }
+  .hero-banner__particle {
+    @apply pointer-events-none absolute rounded-full z-[1];
+  }
+  .hero-banner__particle--1 {
+    @apply h-3 w-3 bg-[#ECC5C6]/40 top-[15%] left-[10%];
+    animation: float-particle 6s ease-in-out infinite;
+  }
+  .hero-banner__particle--2 {
+    @apply h-2 w-2 bg-white/30 top-[30%] right-[20%];
+    animation: float-particle 6s ease-in-out infinite 1.5s;
+  }
+  .hero-banner__particle--3 {
+    @apply h-4 w-4 bg-[#ECC5C6]/25 bottom-[25%] left-[60%];
+    animation: float-particle 6s ease-in-out infinite 3s;
   }
   .hero-banner__glow-bg {
     @apply pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-[#ECC5C6]/25 blur-3xl;
@@ -89,22 +119,230 @@
     @apply relative aspect-4/3 flex-1 overflow-hidden rounded-xl border border-white/20 shadow-lg;
   }
 
+  /* Trust signal bar cuối hero banner */
+  .hero-banner__trust-bar {
+    @apply relative z-10 mt-8 flex flex-wrap items-center justify-center gap-6 sm:gap-10 border-t border-white/15 pt-6;
+  }
+  .hero-banner__trust-item {
+    @apply flex items-center gap-2 text-xs font-bold text-white/80 uppercase tracking-wider;
+  }
+  .hero-banner__trust-icon {
+    @apply h-4 w-4 text-[#ECC5C6];
+  }
+
+  /* ── Trust Banner Section ──────────────────────────────── */
+  .trust-banner {
+    @apply my-8 bg-gradient-to-r from-slate-900 via-gray-900 to-slate-900 rounded-2xl border border-white/10 shadow-2xl p-6 sm:p-8;
+  }
+  .trust-banner__inner {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-6 max-w-page mx-auto text-center;
+  }
+  .trust-banner__pillar {
+    @apply flex flex-col items-center gap-2;
+  }
+  .trust-banner__icon-ring {
+    @apply h-14 w-14 rounded-full bg-gradient-to-br from-[#ECC5C6] to-[#8A9DB1] p-[2px] grid place-items-center shadow-lg;
+  }
+  .trust-banner__icon-ring > svg {
+    @apply h-14 w-14 rounded-full bg-gray-950 p-3.5 text-white;
+  }
+  .trust-banner__icon {
+    @apply h-6 w-6 text-white;
+  }
+  .trust-banner__counter {
+    animation: count-up 0.6s ease-out both;
+  }
+  .trust-banner__value {
+    @apply text-2xl font-black text-white font-mono tracking-tight;
+  }
+  .trust-banner__label {
+    @apply text-xs font-black text-[#ECC5C6] uppercase tracking-widest;
+  }
+  .trust-banner__desc {
+    @apply text-[11px] text-gray-400 font-medium leading-snug max-w-[180px];
+  }
+
+  /* ── Trending Categories Carousel ─────────────────────── */
+  .trending-cats {
+    @apply my-8 bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-xl;
+  }
+  .trending-cats__title {
+    @apply text-lg font-black text-gray-900 tracking-tight font-mono uppercase mb-5;
+  }
+  .trending-cats__track {
+    @apply no-scrollbar flex gap-5 overflow-x-auto py-2;
+  }
+  .trending-cats__item {
+    @apply relative shrink-0;
+  }
+  .trending-cats__bubble {
+    @apply flex flex-col items-center gap-2 outline-none transition-all duration-300 hover:scale-110 cursor-pointer border-none bg-transparent;
+    animation: bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+  .trending-cats__bubble--active {
+    @apply scale-110;
+  }
+  .trending-cats__bubble--active .trending-cats__icon-ring {
+    @apply shadow-xl ring-2 ring-gray-950/20;
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+  .trending-cats__bubble--active .trending-cats__label {
+    @apply text-gray-950 font-black;
+  }
+  .trending-cats__icon-ring {
+    @apply h-16 w-16 rounded-full grid place-items-center shadow-lg transition-all duration-300;
+  }
+  .trending-cats__bubble:hover .trending-cats__icon-ring {
+    @apply shadow-xl;
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+  .trending-cats__icon {
+    @apply h-7 w-7 text-white drop-shadow-sm;
+  }
+  .trending-cats__label {
+    @apply text-[11px] font-bold text-gray-700 text-center whitespace-nowrap transition-colors;
+  }
+  .trending-cats__bubble:hover .trending-cats__label {
+    @apply text-gray-950;
+  }
+
+  /* Subcategory dropdown panel */
+  .trending-cats__dropdown {
+    @apply absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[260px] bg-white rounded-xl border border-gray-200 shadow-2xl z-50 overflow-hidden;
+    animation: slide-up 0.2s ease-out;
+  }
+  /* Caret arrow ở trên */
+  .trending-cats__dropdown::before {
+    content: '';
+    @apply absolute -top-2 left-1/2 -translate-x-1/2 h-4 w-4 rotate-45 bg-white border-l border-t border-gray-200;
+  }
+  .trending-cats__dropdown-header {
+    @apply relative z-10 bg-gray-50 border-b border-gray-100 px-4 py-2.5;
+  }
+  .trending-cats__dropdown-title {
+    @apply flex items-center justify-between text-xs font-black text-gray-900 uppercase tracking-wider hover:text-[#8A9DB1] transition-colors;
+  }
+  .trending-cats__dropdown-chevron {
+    @apply h-3.5 w-3.5 text-gray-400;
+  }
+  .trending-cats__dropdown-list {
+    @apply py-1.5 max-h-[280px] overflow-y-auto;
+  }
+  .trending-cats__dropdown-link {
+    @apply flex items-center gap-2 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 hover:text-gray-950 transition-colors;
+  }
+  .trending-cats__dropdown-dot {
+    @apply h-1.5 w-1.5 rounded-full bg-[#ECC5C6] shrink-0;
+  }
+  .trending-cats__dropdown-link:hover .trending-cats__dropdown-dot {
+    @apply bg-gray-950;
+  }
+  .trending-cats__dropdown-arrow {
+    @apply h-3 w-3 text-gray-300 ml-auto shrink-0;
+  }
+  .trending-cats__dropdown-link:hover .trending-cats__dropdown-arrow {
+    @apply text-gray-600;
+  }
+  .trending-cats__dropdown-footer {
+    @apply block text-center text-[11px] font-black text-[#8A9DB1] hover:text-gray-950 uppercase tracking-wider py-2.5 border-t border-gray-100 transition-colors;
+  }
+
+  /* ── Newsletter Band ──────────────────────────────────── */
+  .newsletter-band {
+    @apply relative my-12 overflow-hidden rounded-3xl p-8 sm:p-12 border border-white/10 shadow-2xl;
+    background: linear-gradient(-45deg, #8A9DB1, #837D68, #7a6e5a, #8A9DB1);
+    background-size: 300% 300%;
+    animation: gradient-shift 8s ease infinite;
+  }
+  .newsletter-band__glow {
+    @apply pointer-events-none absolute rounded-full blur-3xl;
+  }
+  .newsletter-band__glow--left {
+    @apply -top-20 -left-20 h-60 w-60 bg-[#ECC5C6]/30;
+  }
+  .newsletter-band__glow--right {
+    @apply -bottom-20 -right-20 h-60 w-60 bg-white/10;
+  }
+  .newsletter-band__inner {
+    @apply relative z-10 flex flex-col lg:flex-row items-center gap-6 max-w-page mx-auto;
+  }
+  .newsletter-band__icon-wrap {
+    @apply relative shrink-0;
+  }
+  .newsletter-band__mail-icon {
+    @apply h-12 w-12 text-white;
+  }
+  .newsletter-band__sparkle {
+    @apply h-5 w-5 text-[#ECC5C6] absolute -top-1 -right-1;
+    animation: float-particle 3s ease-in-out infinite;
+  }
+  .newsletter-band__copy {
+    @apply flex-1 text-center lg:text-left;
+  }
+  .newsletter-band__title {
+    @apply text-xl sm:text-2xl font-black text-white tracking-tight font-mono uppercase;
+  }
+  .newsletter-band__text {
+    @apply text-xs sm:text-sm text-gray-200 mt-1 font-medium max-w-[50ch];
+  }
+  .newsletter-band__form {
+    @apply flex w-full sm:w-auto items-center bg-white/15 backdrop-blur-md rounded-full border border-white/30 p-1 transition-all;
+  }
+  .newsletter-band__form:focus-within {
+    @apply border-[#ECC5C6] ring-2 ring-[#ECC5C6]/40 bg-white/20;
+  }
+  .newsletter-band__input {
+    @apply min-w-0 flex-1 bg-transparent text-white text-sm font-medium px-4 py-2.5 outline-none;
+  }
+  .newsletter-band__input::placeholder {
+    @apply text-white/50;
+  }
+  .newsletter-band__btn {
+    @apply flex items-center gap-1.5 bg-[#ECC5C6] hover:bg-white text-gray-950 font-black text-xs px-6 py-2.5 rounded-full transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-wider shrink-0;
+  }
+  .newsletter-band__btn-icon {
+    @apply h-3.5 w-3.5;
+  }
+  .newsletter-band__success {
+    @apply bg-white/15 backdrop-blur-md rounded-full px-6 py-3 border border-white/30;
+  }
+  .newsletter-band__success-text {
+    @apply text-white font-bold text-sm;
+  }
+
   /* ── Holographic Showcase Cards Grid ──────────────────── */
   .amazon-hero-grid {
     @apply relative z-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-4 sm:mt-6 px-3 sm:px-0 max-w-page mx-auto;
   }
 
   .amazon-card {
-    @apply bg-white p-5 rounded-2xl border border-gray-200/90 shadow-xl flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5;
+    @apply relative bg-white p-5 rounded-2xl border border-gray-200/90 shadow-xl flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 overflow-hidden;
   }
-  .amazon-card--glow-gold {
-    @apply border-amber-400/50 ring-1 ring-amber-400/20 shadow-amber-500/5;
+  .amazon-card:hover {
+    animation: glow-pulse 2s ease-in-out infinite;
   }
-  .amazon-card--glow-purple {
-    @apply border-indigo-400/50 ring-1 ring-indigo-400/20 shadow-indigo-500/5;
+  .amazon-card__rank-badge {
+    @apply absolute top-3 right-3 bg-gray-950 text-white text-[10px] font-mono font-black h-7 w-7 rounded-full grid place-items-center shadow-lg z-10 border-2 border-[#ECC5C6];
   }
+  .amazon-card__pulse-badge {
+    @apply absolute top-3 left-3 text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-md uppercase tracking-wider z-10;
+    animation: ribbon-shine 3s ease-in-out infinite;
+  }
+  .amazon-card__pulse-badge--hot {
+    @apply bg-rose-600 text-white;
+  }
+  .amazon-card__pulse-badge--new {
+    @apply bg-emerald-600 text-white;
+  }
+  .amazon-card__pulse-badge--trending {
+    @apply bg-violet-600 text-white;
+  }
+  .amazon-card__pulse-badge--premium {
+    @apply bg-amber-500 text-gray-950;
+  }
+
   .amazon-card__head {
-    @apply flex items-center gap-2 mb-3 border-b border-gray-100 pb-2.5;
+    @apply flex items-center gap-2 mb-3 border-b border-gray-100 pb-2.5 mt-6;
   }
   .amazon-card__head-icon {
     @apply h-5 w-5 shrink-0;
@@ -140,6 +378,12 @@
   .amazon-card__deal-name {
     @apply text-xs font-semibold text-gray-800 line-clamp-2 mt-1;
   }
+  .amazon-card__timer-pill {
+    @apply mt-1.5 flex items-center gap-1.5 text-[11px] font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200/80;
+  }
+  .amazon-card__timer-pill-icon {
+    @apply h-3.5 w-3.5 text-amber-600;
+  }
 
   .amazon-card__quad {
     @apply grid grid-cols-2 gap-3 my-2 flex-1;
@@ -169,10 +413,22 @@
   .amazon-card__link-icon {
     @apply h-3.5 w-3.5;
   }
+  .amazon-card__trend {
+    @apply flex items-center gap-1 mt-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider;
+  }
+  .amazon-card__trend-icon {
+    @apply h-3 w-3 text-emerald-500;
+  }
 
   /* ── Lightning Drops Zone ───────────────────────────────── */
   .lightning-deals {
-    @apply mt-10 bg-white p-5 sm:p-6 rounded-2xl border border-gray-200/90 shadow-xl;
+    @apply relative mt-10 bg-white p-5 sm:p-6 rounded-2xl border border-gray-200/90 shadow-xl overflow-hidden;
+  }
+  .lightning-deals__fire-border {
+    @apply absolute top-0 left-0 right-0 h-1;
+    background: linear-gradient(90deg, #e11d48, #f59e0b, #e11d48, #f59e0b, #e11d48);
+    background-size: 300% 100%;
+    animation: fire-border 3s linear infinite;
   }
   .lightning-deals__header {
     @apply flex flex-wrap items-center justify-between gap-3 mb-5 border-b border-gray-100 pb-4;
@@ -189,15 +445,21 @@
   .lightning-deals__title {
     @apply text-xl font-black text-gray-900 tracking-tight font-mono uppercase;
   }
-  .lightning-deals__timer-box {
-    @apply flex items-center gap-1.5 bg-amber-50 text-amber-900 px-3.5 py-1 rounded-full text-xs font-bold border border-amber-200/80 shadow-xs;
+
+  /* Flip-clock style timer */
+  .lightning-deals__flip-timer {
+    @apply flex items-center gap-1 bg-gray-950 text-white px-3 py-1.5 rounded-xl border border-gray-800 shadow-lg;
   }
   .lightning-deals__timer-icon {
-    @apply h-3.5 w-3.5 text-amber-600;
+    @apply h-3.5 w-3.5 text-amber-400 mr-1;
   }
-  .lightning-deals__timer-text {
-    @apply font-mono font-black tracking-wider text-amber-950;
+  .lightning-deals__flip-digit {
+    @apply bg-gray-800 text-amber-400 font-mono font-black text-sm px-1.5 py-0.5 rounded-md min-w-[28px] text-center shadow-inner;
   }
+  .lightning-deals__flip-sep {
+    @apply text-amber-400 font-mono font-black text-sm;
+  }
+
   .lightning-deals__see-all {
     @apply flex items-center gap-1 text-xs font-extrabold text-amazon-link hover:text-amber-600 tracking-wider uppercase transition-colors;
   }
@@ -251,6 +513,9 @@
   .lightning-deals__progress-fill {
     @apply h-full bg-gradient-to-r from-amber-500 to-crimson rounded-full transition-all duration-500 shadow-xs;
   }
+  .lightning-deals__progress-fill--animated {
+    animation: liquid-fill 1.5s ease-out forwards;
+  }
   .lightning-deals__progress-meta {
     @apply flex items-center justify-between text-[10px] font-black text-gray-500 mt-1;
   }
@@ -259,6 +524,12 @@
   }
   .lightning-deals__progress-zap {
     @apply h-3 w-3 text-amber-500;
+  }
+  .lightning-deals__almost-gone {
+    @apply flex items-center gap-0.5 text-rose-600 font-black uppercase tracking-wider animate-pulse;
+  }
+  .lightning-deals__warn-icon {
+    @apply h-3 w-3 text-rose-600;
   }
   .lightning-deals__prime-tag {
     @apply text-[10px] font-black text-emerald-600 block mt-1.5 uppercase tracking-wider;
@@ -294,7 +565,7 @@
   }
 
   .shelf-card {
-    @apply flex flex-col justify-between bg-white rounded-xl border border-gray-200/90 p-3 h-full hover:shadow-xl hover:border-amber-400 transition-all duration-300 hover:-translate-y-1 block outline-none relative;
+    @apply relative flex flex-col justify-between bg-white rounded-xl border border-gray-200/90 p-3 h-full hover:shadow-xl hover:border-amber-400 transition-all duration-300 hover:-translate-y-1 block outline-none overflow-hidden;
   }
   .shelf-card__media {
     @apply relative aspect-square w-full overflow-hidden rounded-lg bg-gray-50 border border-gray-100 block mb-2 shrink-0;
@@ -308,9 +579,47 @@
   .shelf-card:hover .shelf-card__image {
     @apply scale-105;
   }
+
+  /* Corner Ribbon Badge — CSS folded ribbon */
+  .shelf-card__ribbon {
+    @apply absolute top-0 right-0 text-[9px] font-black text-white px-3 py-0.5 uppercase tracking-wider z-10 shadow-md;
+    transform: rotate(0deg);
+    border-radius: 0 8px 0 8px;
+  }
+  .shelf-card__ribbon--sale {
+    @apply bg-rose-600;
+  }
+  .shelf-card__ribbon--new {
+    @apply bg-emerald-600;
+  }
+  .shelf-card__ribbon--top {
+    @apply bg-amber-500 text-gray-950;
+  }
+
   .shelf-card__badge-bestseller {
     @apply absolute top-2 left-2 bg-gradient-to-r from-amber-500 to-rose-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-md uppercase tracking-wider z-10;
   }
+
+  /* Wishlist heart button */
+  .shelf-card__heart-btn {
+    @apply absolute top-2 right-2 bg-white/90 backdrop-blur-sm hover:bg-white text-gray-400 p-1.5 rounded-full shadow-md z-20 cursor-pointer transition-all duration-200 border border-gray-200/80 opacity-0;
+  }
+  .shelf-card:hover .shelf-card__heart-btn {
+    @apply opacity-100;
+  }
+  .shelf-card__heart-btn--active {
+    @apply text-rose-500 opacity-100 bg-white;
+  }
+  .shelf-card__heart-btn--active .shelf-card__heart-icon {
+    @apply fill-rose-500;
+  }
+  .shelf-card__heart-btn--animating {
+    animation: heart-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .shelf-card__heart-icon {
+    @apply h-4 w-4 transition-colors;
+  }
+
   .shelf-card__quick-btn {
     @apply absolute bottom-2 left-1/2 -translate-x-1/2 bg-gray-950/90 hover:bg-gray-950 text-white text-[11px] font-black px-3.5 py-1.5 rounded-full shadow-lg border border-white/20 opacity-0 transition-all duration-300 hover:scale-105 cursor-pointer flex items-center gap-1.5 uppercase tracking-wider z-20 whitespace-nowrap;
   }
@@ -353,10 +662,19 @@
 
   /* ── creator-spotlight ──────────────────────────────────── */
   .creator-spotlight {
-    @apply mt-12 bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950 text-white p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden;
+    @apply relative mt-12 bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950 text-white p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl overflow-hidden;
+  }
+  .creator-spotlight__particle {
+    @apply pointer-events-none absolute rounded-full z-[1];
+  }
+  .creator-spotlight__particle--1 {
+    @apply h-40 w-40 bg-amber-500/10 -top-10 -right-10 blur-3xl;
+  }
+  .creator-spotlight__particle--2 {
+    @apply h-32 w-32 bg-indigo-500/10 -bottom-10 -left-10 blur-3xl;
   }
   .creator-spotlight__head {
-    @apply flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-white/10 pb-5;
+    @apply relative z-10 flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-white/10 pb-5;
   }
   .creator-spotlight__title-group {
     @apply space-y-1;
@@ -378,25 +696,71 @@
   }
 
   .creator-spotlight__grid {
-    @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+    @apply relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6;
   }
   .creator-card {
-    @apply bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/10 flex flex-col justify-between hover:border-amber-400/50 transition-all duration-300 hover:-translate-y-1 shadow-xl;
+    @apply relative bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/10 flex flex-col justify-between hover:border-amber-400/50 transition-all duration-300 hover:-translate-y-1 shadow-xl overflow-hidden;
   }
+
+  /* Rank tier modifiers */
+  .creator-card--gold {
+    @apply border-amber-500/30;
+  }
+  .creator-card--gold:hover {
+    @apply border-amber-400/70;
+    box-shadow: 0 0 30px 5px rgba(245, 158, 11, 0.15);
+  }
+  .creator-card--silver {
+    @apply border-gray-400/30;
+  }
+  .creator-card--silver:hover {
+    @apply border-gray-300/70;
+    box-shadow: 0 0 30px 5px rgba(156, 163, 175, 0.15);
+  }
+  .creator-card--bronze {
+    @apply border-orange-600/30;
+  }
+  .creator-card--bronze:hover {
+    @apply border-orange-500/70;
+    box-shadow: 0 0 30px 5px rgba(234, 88, 12, 0.15);
+  }
+
+  .creator-card__rank-tier {
+    @apply absolute top-3 right-3 flex items-center gap-1 text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-md z-10;
+  }
+  .creator-card--gold .creator-card__rank-tier {
+    @apply bg-amber-500 text-gray-950;
+  }
+  .creator-card--silver .creator-card__rank-tier {
+    @apply bg-gray-300 text-gray-950;
+  }
+  .creator-card--bronze .creator-card__rank-tier {
+    @apply bg-orange-600 text-white;
+  }
+  .creator-card__rank-icon {
+    @apply h-3 w-3;
+  }
+
   .creator-card__header {
-    @apply flex items-center gap-3.5 mb-3;
+    @apply flex items-center gap-3.5 mb-3 mt-2;
   }
   .creator-card__avatar-box {
     @apply relative shrink-0;
   }
+  /* Spinning gradient ring around avatar */
+  .creator-card__spin-ring {
+    @apply absolute -inset-[3px] rounded-full;
+    background: conic-gradient(from 0deg, #f59e0b, #ef4444, #8b5cf6, #3b82f6, #10b981, #f59e0b);
+    animation: spin-ring 4s linear infinite;
+  }
   .creator-card__avatar {
-    @apply h-12 w-12 rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 p-0.5 grid place-items-center shadow-md;
+    @apply relative h-12 w-12 rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 p-0.5 grid place-items-center shadow-md;
   }
   .creator-card__avatar-text {
     @apply h-full w-full rounded-full bg-gray-950 text-white font-mono font-black text-lg grid place-items-center;
   }
   .creator-card__star-badge {
-    @apply absolute -bottom-1 -right-1 bg-amber-500 text-gray-950 p-1 rounded-full shadow-md grid place-items-center;
+    @apply absolute -bottom-1 -right-1 bg-amber-500 text-gray-950 p-1 rounded-full shadow-md grid place-items-center z-10;
   }
   .creator-card__star-icon {
     @apply h-3 w-3 text-gray-950;
@@ -468,5 +832,26 @@
   }
   .promo-band__cta {
     @apply bg-gradient-to-r from-cyber-gold to-amber-500 text-gray-950 font-black text-xs px-6 py-3 rounded-xl transition-all shadow-lg hover:brightness-110 shrink-0 inline-flex items-center gap-2 uppercase tracking-wider;
+  }
+
+  /* ── shelf navigation arrows ─────────────────────────── */
+  .shelf__nav {
+    @apply absolute top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 shadow-lg grid place-items-center cursor-pointer transition-all hover:bg-gray-950 hover:text-white hover:border-gray-950 z-10 text-gray-600;
+  }
+  .shelf__nav--prev {
+    @apply left-0 -translate-x-1/2;
+  }
+  .shelf__nav--next {
+    @apply right-0 translate-x-1/2;
+  }
+  .shelf__nav-icon {
+    @apply h-5 w-5;
+  }
+
+  .shelf__dismissed {
+    @apply mt-10 bg-gray-100 rounded-2xl p-4 text-sm text-gray-600 flex items-center gap-3;
+  }
+  .shelf__dismissed-name {
+    @apply font-bold text-gray-900;
   }
 }

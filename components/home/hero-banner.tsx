@@ -1,11 +1,22 @@
+'use client';
+
+import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowRight, Sparkles, ShieldCheck, Zap, Truck, Star, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function HeroBanner({ photos }: { photos: string[] }) {
   return (
     <section className="hero-banner">
+      {/* Animated shimmer sweep overlay */}
+      <span aria-hidden className="hero-banner__shimmer" />
+
+      {/* Floating decorative particles */}
+      <span aria-hidden className="hero-banner__particle hero-banner__particle--1" />
+      <span aria-hidden className="hero-banner__particle hero-banner__particle--2" />
+      <span aria-hidden className="hero-banner__particle hero-banner__particle--3" />
+
       <div className="hero-banner__glow-bg" />
 
       <div className="hero-banner__inner">
@@ -63,6 +74,26 @@ export function HeroBanner({ photos }: { photos: string[] }) {
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* ── Trust Signal Bar ────────────────────────────────── */}
+      <div className="hero-banner__trust-bar">
+        <div className="hero-banner__trust-item">
+          <ShieldCheck className="hero-banner__trust-icon" />
+          <span>Secure Payment</span>
+        </div>
+        <div className="hero-banner__trust-item">
+          <Truck className="hero-banner__trust-icon" />
+          <span>Express Delivery</span>
+        </div>
+        <div className="hero-banner__trust-item">
+          <Star className="hero-banner__trust-icon" />
+          <span>50K+ Reviews</span>
+        </div>
+        <div className="hero-banner__trust-item">
+          <Globe className="hero-banner__trust-icon" />
+          <span>Ship Worldwide</span>
+        </div>
       </div>
     </section>
   );

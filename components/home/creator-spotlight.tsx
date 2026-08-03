@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Route } from 'next';
-import { Award, Star, Users, MapPin, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Award, Star, Users, MapPin, ArrowRight, ShieldCheck, Crown, Trophy, Medal } from 'lucide-react';
 import { SHOPS, featuredListings, type Shop, type Listing } from '@/lib/catalog';
 
 type CreatorSpotlightProps = {
@@ -11,12 +11,22 @@ type CreatorSpotlightProps = {
   listings?: Listing[];
 };
 
+const RANK_TIERS = [
+  { label: 'GOLD', emoji: '🥇', mod: 'creator-card--gold', Icon: Crown },
+  { label: 'SILVER', emoji: '🥈', mod: 'creator-card--silver', Icon: Trophy },
+  { label: 'BRONZE', emoji: '🥉', mod: 'creator-card--bronze', Icon: Medal },
+] as const;
+
 export function CreatorSpotlight({ shops = SHOPS, listings }: CreatorSpotlightProps) {
   const featuredShops = shops.slice(0, 3);
   const pool = listings ?? featuredListings(50);
 
   return (
     <section className="creator-spotlight">
+      {/* Decorative animated particles */}
+      <span aria-hidden className="creator-spotlight__particle creator-spotlight__particle--1" />
+      <span aria-hidden className="creator-spotlight__particle creator-spotlight__particle--2" />
+
       <div className="creator-spotlight__head">
         <div className="creator-spotlight__title-group">
           <span className="creator-spotlight__badge font-mono">
@@ -30,13 +40,23 @@ export function CreatorSpotlight({ shops = SHOPS, listings }: CreatorSpotlightPr
       </div>
 
       <div className="creator-spotlight__grid">
-        {featuredShops.map((shop) => {
+        {featuredShops.map((shop, index) => {
           const shopListings = pool.filter((l) => l.shopSlug === shop.slug).slice(0, 3);
+          const rank = RANK_TIERS[index] ?? RANK_TIERS[2]!;
+          const RankIcon = rank.Icon;
 
           return (
-            <div key={shop.slug} className="creator-card">
+            <div key={shop.slug} className={`creator-card ${rank.mod}`}>
+              {/* Rank Tier Badge */}
+              <span className="creator-card__rank-tier">
+                <RankIcon className="creator-card__rank-icon" />
+                {rank.label}
+              </span>
+
               <div className="creator-card__header">
                 <div className="creator-card__avatar-box">
+                  {/* Spinning gradient ring */}
+                  <span className="creator-card__spin-ring" aria-hidden />
                   <div className="creator-card__avatar">
                     <span className="creator-card__avatar-text">{shop.name.charAt(0)}</span>
                   </div>

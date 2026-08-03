@@ -4,7 +4,7 @@ import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Route } from 'next';
-import { Timer, Zap, ChevronRight, Flame } from 'lucide-react';
+import { Timer, Zap, ChevronRight, Flame, AlertTriangle } from 'lucide-react';
 import type { Listing } from '@/lib/catalog';
 import { Money } from '@/components/shared/money';
 
@@ -19,7 +19,7 @@ export function LightningDeals({ listings }: LightningDealsProps) {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
+        if (prev.minutes > 0) return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
         if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
         return { hours: 12, minutes: 0, seconds: 0 };
       });
@@ -31,6 +31,9 @@ export function LightningDeals({ listings }: LightningDealsProps) {
 
   return (
     <section className="lightning-deals">
+      {/* Animated fire border top */}
+      <div className="lightning-deals__fire-border" aria-hidden />
+
       <div className="lightning-deals__header">
         <div className="lightning-deals__title-group">
           <div className="lightning-deals__badge-live">
@@ -40,11 +43,14 @@ export function LightningDeals({ listings }: LightningDealsProps) {
 
           <h2 className="lightning-deals__title">LIGHTNING DROPS ZONE</h2>
 
-          <div className="lightning-deals__timer-box">
+          {/* Flip-clock style timer */}
+          <div className="lightning-deals__flip-timer">
             <Timer className="lightning-deals__timer-icon" />
-            <span className="lightning-deals__timer-text">
-              CLOSING IN {formatTwo(timeLeft.hours)}:{formatTwo(timeLeft.minutes)}:{formatTwo(timeLeft.seconds)}
-            </span>
+            <span className="lightning-deals__flip-digit">{formatTwo(timeLeft.hours)}</span>
+            <span className="lightning-deals__flip-sep">:</span>
+            <span className="lightning-deals__flip-digit">{formatTwo(timeLeft.minutes)}</span>
+            <span className="lightning-deals__flip-sep">:</span>
+            <span className="lightning-deals__flip-digit">{formatTwo(timeLeft.seconds)}</span>
           </div>
         </div>
 
@@ -59,6 +65,7 @@ export function LightningDeals({ listings }: LightningDealsProps) {
           const discountPct = 30 + (index * 6) % 35;
           const dealPrice = Math.round(item.priceCents * (1 - discountPct / 100));
           const progressPct = 52 + (index * 8) % 42;
+          const almostGone = progressPct > 80;
 
           return (
             <div key={item.slug} className="lightning-deals__card">
@@ -86,13 +93,20 @@ export function LightningDeals({ listings }: LightningDealsProps) {
                 <div className="lightning-deals__progress-group">
                   <div className="lightning-deals__progress-bar">
                     <div
-                      className="lightning-deals__progress-fill"
+                      className="lightning-deals__progress-fill lightning-deals__progress-fill--animated"
                       style={{ width: `${progressPct}%` }}
                     />
                   </div>
                   <div className="lightning-deals__progress-meta">
                     <span className="lightning-deals__progress-text">{progressPct}% CLAIMED</span>
-                    <Zap className="lightning-deals__progress-zap" />
+                    {almostGone ? (
+                      <span className="lightning-deals__almost-gone">
+                        <AlertTriangle className="lightning-deals__warn-icon" />
+                        ALMOST GONE!
+                      </span>
+                    ) : (
+                      <Zap className="lightning-deals__progress-zap" />
+                    )}
                   </div>
                 </div>
 

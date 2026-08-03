@@ -2,9 +2,12 @@ import type { Metadata } from 'next';
 import { AmazonHeroGrid } from '@/components/home/amazon-hero-grid';
 import { LightningDeals } from '@/components/home/lightning-deals';
 import { HubNav } from '@/components/home/hub-nav';
+import { TrustBanner } from '@/components/home/trust-banner';
+import { TrendingCats } from '@/components/home/trending-cats';
+import { NewsletterBand } from '@/components/home/newsletter-band';
 import { BasketNudge } from '@/components/commerce/basket-nudge';
 import { HomeShelvesClient } from '@/components/home/home-shelves-client';
-import { featuredListings, searchListings, SHOPS } from '@/lib/catalog';
+import { featuredListings, searchListings, menuTree, SHOPS } from '@/lib/catalog';
 import { getCart } from '@/lib/cart';
 
 export const metadata: Metadata = {
@@ -15,6 +18,7 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const featured = featuredListings(20);
+  const tree = menuTree();
   const [pod, files, stock, clothing, home, jewelry, paper, cart] = await Promise.all([
     searchListings({ kind: 'pod', sort: 'rating' }),
     searchListings({ kind: 'file', sort: 'rating' }),
@@ -42,8 +46,14 @@ export default async function HomePage() {
         <AmazonHeroGrid featured={featured} podListings={pod} fileListings={files} />
       </div>
 
+      {/* Trending Categories Carousel */}
+      <TrendingCats tree={tree} />
+
       {/* Lightning Drops Section with Realtime Countdown Timer */}
       <LightningDeals listings={pod} />
+
+      {/* Trust Signal Pillars */}
+      <TrustBanner />
 
       {/* Client Shelves with Quick-View Modal & Live Activity Toast */}
       <HomeShelvesClient
@@ -57,6 +67,9 @@ export default async function HomePage() {
         paper={paper}
         shops={SHOPS}
       />
+
+      {/* Newsletter CTA Banner */}
+      <NewsletterBand />
     </>
   );
 }
