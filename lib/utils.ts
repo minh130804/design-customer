@@ -1,12 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { extendTailwindMerge } from 'tailwind-merge';
 
-/**
- * tailwind-merge chỉ biết các nhóm utility CHUẨN của Tailwind.
- * Thang tuỳ chỉnh của ta (shadow-elev-*, rounded-card, text-h1…) là class lạ
- * với nó, nên `shadow-elev-1 shadow-elev-3` sẽ được giữ cả hai và bóng chồng lên nhau.
- * Phải khai báo thêm nhóm — đây là bước hay bị bỏ sót nhất khi dùng bộ ba này.
- */
 const twMerge = extendTailwindMerge({
   extend: {
     classGroups: {
@@ -24,26 +18,13 @@ const twMerge = extendTailwindMerge({
   },
 });
 
-/**
- * clsx nối và lọc → twMerge khử class xung đột, giữ cái sau.
- * Thứ tự có ý nghĩa: `className` của người gọi luôn đứng cuối nên luôn thắng.
- */
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-/** Tiền lưu bằng số nguyên cent — không bao giờ dùng float cho tiền. */
 export const formatUsd = (cents: number) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
     cents / 100,
   );
 
-/**
- * Etsy không hứa "5–7 ngày" mà in ra một KHOẢNG NGÀY cụ thể:
- * "Order today to get by Feb 18–Mar 2".
- *
- * `from` phải do server truyền vào (ngày cắt đơn của backend), không lấy
- * Date.now() ở client: máy người dùng có thể lệch múi giờ hoặc sai đồng hồ,
- * và một trang ISR sẽ đóng băng ngày sai vào HTML tĩnh.
- */
 export function deliveryWindow(from: string, minDays: number, maxDays: number) {
   const base = new Date(from + 'T00:00:00Z');
   const at = (d: number) => {
@@ -59,23 +40,40 @@ export function deliveryWindow(from: string, minDays: number, maxDays: number) {
   return `${fmt.format(at(minDays))}–${fmt.format(at(maxDays))}`;
 }
 
-/**
- * Ảnh demo lấy từ picsum.photos.
- *
- * ── Vì sao dạng `/seed/<khoá>/` chứ không phải URL ngẫu nhiên ────────────
- *
- * `picsum.photos/800/800` trả về một ảnh KHÁC mỗi lần gọi. Với 18 trang sản phẩm
- * prerender thì ảnh nướng vào HTML tĩnh lúc build sẽ khác ảnh trình duyệt tải
- * lúc xem, và mỗi lần F5 là sản phẩm đổi mặt. `/seed/<khoá>/` băm khoá ra một
- * ảnh cố định, nên cùng một khoá luôn cho cùng một ảnh.
- *
- * Khoá luôn chứa slug sản phẩm, nhờ đó ảnh trên thẻ ở lưới và ảnh đầu trong
- * thư viện của trang chi tiết là CÙNG một ảnh — thẻ hiện một thứ rồi bấm vào ra
- * thứ khác là lỗi dễ thấy nhất của dữ liệu demo.
- *
- * Đây chỉ là ảnh tạm. Ở bản thật ảnh đi qua CDN riêng
- * (`cdn.podmarket.com/public/**`, xem `next.config.ts`).
- */
-export function demoPhoto(seed: string, size = 800) {
-  return `https://picsum.photos/seed/${seed}/${size}/${size}`;
+const PRODUCT_PHOTOS = [
+  'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&q=80',
+  'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&q=80',
+  'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&q=80',
+  'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=800&q=80',
+  'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
+  'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
+  'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80',
+  'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&q=80',
+  'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80',
+  'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80',
+  'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80',
+  'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&q=80',
+  'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80',
+  'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&q=80',
+  'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80',
+  'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&q=80',
+  'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&q=80',
+  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80',
+  'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=800&q=80',
+  'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&q=80',
+  'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80',
+  'https://images.unsplash.com/photo-1560343090-f0409e92791a?w=800&q=80',
+  'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&q=80',
+  'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&q=80',
+  'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800&q=80',
+];
+
+export function demoPhoto(seed: string, size = 800): string {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash << 5) - hash + seed.charCodeAt(i);
+    hash |= 0;
+  }
+  const index = Math.abs(hash) % PRODUCT_PHOTOS.length;
+  return (PRODUCT_PHOTOS[index] ?? PRODUCT_PHOTOS[0]) as string;
 }
