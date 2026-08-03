@@ -52,14 +52,44 @@
   .basket-nudge__icon {
     @apply grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-amber-100 text-amber-900 font-bold;
   }
+  .basket-nudge__icon-glyph {
+    @apply h-4 w-4 text-amber-900;
+  }
   .basket-nudge__title {
     @apply flex-1 text-title-sm font-bold text-ink;
   }
   .basket-nudge__close {
-    @apply -mr-1 -mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full text-gray-400 outline-none transition-colors;
+    @apply -mr-1 -mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full text-gray-400 outline-none transition-colors cursor-pointer;
+  }
+  .basket-nudge__close-icon {
+    @apply h-4 w-4;
   }
   .basket-nudge__close:hover {
     @apply bg-gray-100 text-ink;
+  }
+  .basket-nudge__list {
+    @apply my-3 space-y-2.5 border-t border-b border-gray-100 py-2.5;
+  }
+  .basket-nudge__item {
+    @apply flex items-center gap-2.5;
+  }
+  .basket-nudge__thumb {
+    @apply relative h-9 w-9 shrink-0 overflow-hidden rounded-lg border border-gray-200 bg-gray-100 block;
+  }
+  .basket-nudge__image {
+    @apply object-cover;
+  }
+  .basket-nudge__text {
+    @apply min-w-0 flex-1 flex flex-col leading-tight;
+  }
+  .basket-nudge__name {
+    @apply truncate text-xs font-bold text-gray-900;
+  }
+  .basket-nudge__shop {
+    @apply text-[10px] font-semibold text-gray-500 truncate;
+  }
+  .basket-nudge__cta {
+    @apply mt-2 w-full font-bold text-xs py-2;
   }
 
   /* ── notify ───────────────────────────────────────────── */

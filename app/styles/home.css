@@ -294,22 +294,157 @@
   }
 
   .shelf-card {
-    @apply flex flex-col justify-between bg-white rounded-xl border border-gray-200/90 p-3 h-full hover:shadow-xl hover:border-[#ECC5C6] transition-all duration-300 hover:-translate-y-1 block outline-none;
+    @apply flex flex-col justify-between bg-white rounded-xl border border-gray-200/90 p-3 h-full hover:shadow-xl hover:border-amber-400 transition-all duration-300 hover:-translate-y-1 block outline-none relative;
   }
   .shelf-card__media {
     @apply relative aspect-square w-full overflow-hidden rounded-lg bg-gray-50 border border-gray-100 block mb-2 shrink-0;
   }
+  .shelf-card__image-link {
+    @apply block h-full w-full relative;
+  }
   .shelf-card__image {
-    @apply object-cover transition-transform duration-500 hover:scale-105;
+    @apply object-cover transition-transform duration-500;
+  }
+  .shelf-card:hover .shelf-card__image {
+    @apply scale-105;
+  }
+  .shelf-card__badge-bestseller {
+    @apply absolute top-2 left-2 bg-gradient-to-r from-amber-500 to-rose-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-md uppercase tracking-wider z-10;
+  }
+  .shelf-card__quick-btn {
+    @apply absolute bottom-2 left-1/2 -translate-x-1/2 bg-gray-950/90 hover:bg-gray-950 text-white text-[11px] font-black px-3.5 py-1.5 rounded-full shadow-lg border border-white/20 opacity-0 transition-all duration-300 hover:scale-105 cursor-pointer flex items-center gap-1.5 uppercase tracking-wider z-20 whitespace-nowrap;
+  }
+  .shelf-card:hover .shelf-card__quick-btn {
+    @apply opacity-100;
+  }
+  .shelf-card__quick-icon {
+    @apply h-3.5 w-3.5 text-amber-400;
+  }
+  .shelf-card__body {
+    @apply flex flex-col justify-between flex-1;
   }
   .shelf-card__title {
-    @apply text-xs font-bold text-gray-800 line-clamp-2 leading-tight hover:text-[#8A9DB1] transition-colors mt-1;
+    @apply text-xs font-bold text-gray-800 line-clamp-2 leading-tight hover:text-amber-700 transition-colors mt-1;
   }
   .shelf-card__rating {
     @apply mt-1 flex items-center gap-1;
   }
   .shelf-card__prices {
     @apply mt-1.5 flex items-baseline gap-1.5;
+  }
+  .shelf-card__price-current {
+    @apply text-sm font-black text-gray-950;
+  }
+  .shelf-card__deal-badge {
+    @apply inline-flex items-center gap-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md mt-1.5 uppercase tracking-wider w-fit;
+  }
+  .shelf-card__sparkle-icon {
+    @apply h-3 w-3 text-rose-500;
+  }
+  .shelf-card__prime-row {
+    @apply flex items-center gap-1.5 mt-2 pt-2 border-t border-gray-100 text-[10px] font-extrabold text-emerald-700 uppercase tracking-wider;
+  }
+  .shelf-card__prime-logo {
+    @apply bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded text-[9px] font-black font-mono;
+  }
+  .shelf-card__delivery {
+    @apply truncate;
+  }
+
+  /* ── creator-spotlight ──────────────────────────────────── */
+  .creator-spotlight {
+    @apply mt-12 bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950 text-white p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden;
+  }
+  .creator-spotlight__head {
+    @apply flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-white/10 pb-5;
+  }
+  .creator-spotlight__title-group {
+    @apply space-y-1;
+  }
+  .creator-spotlight__badge {
+    @apply inline-flex items-center gap-1.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase shadow-sm;
+  }
+  .creator-spotlight__badge-icon {
+    @apply h-3.5 w-3.5 text-amber-400;
+  }
+  .creator-spotlight__title {
+    @apply text-2xl font-black tracking-tight text-white font-mono uppercase;
+  }
+  .creator-spotlight__see-all {
+    @apply inline-flex items-center gap-1.5 text-xs font-black text-amber-400 hover:text-white uppercase tracking-wider font-mono transition-colors;
+  }
+  .creator-spotlight__arrow-icon {
+    @apply h-4 w-4;
+  }
+
+  .creator-spotlight__grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+  }
+  .creator-card {
+    @apply bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/10 flex flex-col justify-between hover:border-amber-400/50 transition-all duration-300 hover:-translate-y-1 shadow-xl;
+  }
+  .creator-card__header {
+    @apply flex items-center gap-3.5 mb-3;
+  }
+  .creator-card__avatar-box {
+    @apply relative shrink-0;
+  }
+  .creator-card__avatar {
+    @apply h-12 w-12 rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 p-0.5 grid place-items-center shadow-md;
+  }
+  .creator-card__avatar-text {
+    @apply h-full w-full rounded-full bg-gray-950 text-white font-mono font-black text-lg grid place-items-center;
+  }
+  .creator-card__star-badge {
+    @apply absolute -bottom-1 -right-1 bg-amber-500 text-gray-950 p-1 rounded-full shadow-md grid place-items-center;
+  }
+  .creator-card__star-icon {
+    @apply h-3 w-3 text-gray-950;
+  }
+  .creator-card__meta {
+    @apply min-w-0 flex-1;
+  }
+  .creator-card__name {
+    @apply text-sm font-black text-white truncate;
+  }
+  .creator-card__link {
+    @apply hover:text-amber-400 transition-colors;
+  }
+  .creator-card__location {
+    @apply flex items-center gap-1 text-[11px] text-gray-400 font-medium truncate mt-0.5;
+  }
+  .creator-card__loc-icon {
+    @apply h-3 w-3 text-gray-400 shrink-0;
+  }
+  .creator-card__tagline {
+    @apply text-xs text-gray-300 line-clamp-2 leading-relaxed mb-4 font-medium;
+  }
+  .creator-card__stats {
+    @apply grid grid-cols-3 gap-2 bg-black/30 rounded-xl p-2.5 mb-4 border border-white/5 text-center text-xs;
+  }
+  .creator-card__stat {
+    @apply flex flex-col items-center justify-center;
+  }
+  .creator-card__stat-icon {
+    @apply h-3.5 w-3.5 mb-0.5;
+  }
+  .creator-card__stat-val {
+    @apply font-black text-white text-xs;
+  }
+  .creator-card__stat-lbl {
+    @apply text-[10px] text-gray-400 font-semibold uppercase tracking-wider;
+  }
+  .creator-card__products {
+    @apply grid grid-cols-3 gap-2 mb-4;
+  }
+  .creator-card__thumb-wrapper {
+    @apply relative aspect-square rounded-lg overflow-hidden border border-white/10 bg-black/40 block hover:opacity-90 transition-opacity;
+  }
+  .creator-card__thumb {
+    @apply object-cover transition-transform duration-300 hover:scale-105;
+  }
+  .creator-card__action-btn {
+    @apply w-full bg-amber-400 hover:bg-white text-gray-950 font-black text-xs py-2.5 rounded-xl text-center uppercase tracking-wider font-mono transition-all shadow-md block;
   }
 
   /* ── promo-band ───────────────────────────────────────── */

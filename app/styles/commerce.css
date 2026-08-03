@@ -875,4 +875,199 @@
   .show-more__icon {
     @apply h-3.5 w-3.5;
   }
+
+  /* ── quick-modal ────────────────────────────────────────── */
+  .quick-modal__overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6;
+  }
+  .quick-modal__backdrop {
+    @apply fixed inset-0 bg-black/75 backdrop-blur-xs animate-in fade-in duration-200;
+  }
+  .quick-modal__content {
+    @apply relative z-10 w-full max-w-[900px] max-h-[90vh] bg-white rounded-3xl shadow-2xl overflow-y-auto border border-gray-200 animate-in zoom-in-95 duration-200 p-6 sm:p-8 text-ink;
+  }
+  .quick-modal__close-btn {
+    @apply absolute top-4 right-4 bg-gray-100 hover:bg-gray-900 text-gray-700 hover:text-white p-2 rounded-full transition-colors cursor-pointer z-20;
+  }
+  .quick-modal__close-icon {
+    @apply h-5 w-5;
+  }
+  .quick-modal__grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-8 items-start;
+  }
+  .quick-modal__media-wrapper {
+    @apply space-y-3;
+  }
+  .quick-modal__media {
+    @apply relative aspect-square w-full rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 shadow-md;
+  }
+  .quick-modal__image {
+    @apply object-cover transition-transform duration-500 hover:scale-105;
+  }
+  .quick-modal__badge-discount {
+    @apply absolute top-3 left-3 bg-rose-600 text-white text-xs font-black px-3 py-1 rounded-full shadow-md uppercase tracking-wider;
+  }
+  .quick-modal__badge-seller {
+    @apply absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white text-xs font-black px-3 py-1 rounded-full shadow-md uppercase tracking-wider;
+  }
+  .quick-modal__media-hint {
+    @apply flex items-center gap-1.5 text-xs text-gray-500 font-semibold justify-center;
+  }
+  .quick-modal__shield-icon {
+    @apply h-4 w-4 text-emerald-600;
+  }
+
+  .quick-modal__info {
+    @apply space-y-4;
+  }
+  .quick-modal__shop {
+    @apply flex items-center justify-between gap-2 border-b border-gray-100 pb-2;
+  }
+  .quick-modal__shop-link {
+    @apply text-xs font-black text-amber-700 hover:text-gray-950 uppercase tracking-widest font-mono;
+  }
+  .quick-modal__badge-kind {
+    @apply text-[11px] font-black px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800 uppercase tracking-wider;
+  }
+  .quick-modal__title {
+    @apply text-xl sm:text-2xl font-black text-gray-950 tracking-tight leading-snug font-sans;
+  }
+  .quick-modal__rating {
+    @apply flex items-center gap-2 text-xs text-gray-600 flex-wrap;
+  }
+  .quick-modal__stars {
+    @apply flex items-center gap-0.5 text-amber-400;
+  }
+  .quick-modal__star {
+    @apply h-4 w-4 text-gray-300;
+  }
+  .quick-modal__star--filled {
+    @apply text-amber-400 fill-amber-400;
+  }
+  .quick-modal__rating-score {
+    @apply font-black text-gray-900;
+  }
+  .quick-modal__rating-count {
+    @apply text-gray-500;
+  }
+  .quick-modal__sold {
+    @apply font-bold text-emerald-600;
+  }
+
+  .quick-modal__pricing {
+    @apply flex items-baseline gap-3 bg-amber-50/60 p-3.5 rounded-2xl border border-amber-200/80;
+  }
+  .quick-modal__price-current {
+    @apply text-2xl font-black text-gray-950;
+  }
+  .quick-modal__price-compare {
+    @apply text-sm text-gray-400 line-through font-semibold;
+  }
+  .quick-modal__free-ship {
+    @apply text-xs font-black text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full uppercase tracking-wider ml-auto;
+  }
+
+  .quick-modal__option-group {
+    @apply space-y-1.5;
+  }
+  .quick-modal__option-label {
+    @apply text-xs font-black text-gray-800 uppercase tracking-wider block font-mono;
+  }
+  .quick-modal__option-value {
+    @apply text-amber-700 font-sans font-bold normal-case ml-1;
+  }
+  .quick-modal__options {
+    @apply flex flex-wrap gap-2;
+  }
+  .quick-modal__pill {
+    @apply text-xs font-bold px-3.5 py-1.5 rounded-full border border-gray-300 bg-white text-gray-800 hover:border-gray-950 transition-all cursor-pointer;
+  }
+  .quick-modal__pill--active {
+    @apply border-gray-950 bg-gray-950 text-white shadow-md scale-105;
+  }
+
+  .quick-modal__qty-row {
+    @apply flex items-center gap-3 pt-2;
+  }
+  .quick-modal__qty-stepper {
+    @apply inline-flex items-center rounded-full border border-gray-300 bg-gray-50 p-0.5;
+  }
+  .quick-modal__qty-btn {
+    @apply h-7 w-7 rounded-full bg-white hover:bg-gray-200 text-gray-900 font-black text-sm grid place-items-center cursor-pointer transition-colors shadow-xs;
+  }
+  .quick-modal__qty-val {
+    @apply w-8 text-center text-xs font-mono font-black text-gray-950;
+  }
+  .quick-modal__stock-tag {
+    @apply text-[11px] font-extrabold text-amber-700 uppercase tracking-wider ml-auto;
+  }
+
+  .quick-modal__actions {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-gray-100;
+  }
+  .quick-modal__add-btn {
+    @apply bg-gray-950 hover:bg-amber-500 text-white hover:text-gray-950 font-black text-xs px-6 py-3.5 rounded-full transition-all shadow-xl hover:scale-105 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wider cursor-pointer border-none;
+  }
+  .quick-modal__add-btn--success {
+    @apply bg-emerald-600 hover:bg-emerald-600 text-white;
+  }
+  .quick-modal__details-link {
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-900 font-black text-xs px-6 py-3.5 rounded-full transition-all hover:scale-105 flex items-center justify-center gap-2 uppercase tracking-wider text-center border border-gray-300;
+  }
+  .quick-modal__cta-icon {
+    @apply h-4 w-4;
+  }
+
+  /* ── live-toast ─────────────────────────────────────────── */
+  .live-toast {
+    @apply fixed bottom-5 left-5 z-40 w-[min(90vw,340px)] bg-white rounded-2xl p-3.5 shadow-2xl border border-gray-200 animate-in slide-in-from-bottom-5 fade-in duration-300 text-ink;
+  }
+  .live-toast__close {
+    @apply absolute top-2 right-2 text-gray-400 hover:text-gray-900 p-1 rounded-full transition-colors cursor-pointer;
+  }
+  .live-toast__close-icon {
+    @apply h-3.5 w-3.5;
+  }
+  .live-toast__body {
+    @apply flex items-center gap-3;
+  }
+  .live-toast__media {
+    @apply relative h-12 w-12 rounded-xl overflow-hidden shrink-0 border border-gray-200 bg-gray-100;
+  }
+  .live-toast__image {
+    @apply object-cover;
+  }
+  .live-toast__icon-badge {
+    @apply absolute bottom-0 right-0 bg-rose-600 text-white p-0.5 rounded-tl-md shadow-xs;
+  }
+  .live-toast__badge-icon {
+    @apply h-2.5 w-2.5;
+  }
+  .live-toast__info {
+    @apply min-w-0 flex-1 space-y-0.5;
+  }
+  .live-toast__header {
+    @apply text-[11px] text-gray-600 leading-tight truncate;
+  }
+  .live-toast__buyer {
+    @apply font-black text-gray-900;
+  }
+  .live-toast__location {
+    @apply font-semibold text-gray-700;
+  }
+  .live-toast__product {
+    @apply text-xs font-bold text-gray-900 truncate leading-snug;
+  }
+  .live-toast__meta {
+    @apply flex items-center justify-between text-[10px] text-gray-400 font-medium pt-0.5;
+  }
+  .live-toast__tag {
+    @apply flex items-center gap-1 font-bold text-emerald-700 uppercase tracking-wider;
+  }
+  .live-toast__shield {
+    @apply h-3 w-3 text-emerald-600;
+  }
+  .live-toast__time {
+    @apply font-mono;
+  }
 }
