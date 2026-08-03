@@ -952,7 +952,7 @@ function generateHugeCatalog(base: Listing[]): Listing[] {
       rating: 4.6 + (i % 5) * 0.1,
       reviewCount: 45 + (i * 29) % 520,
       soldCount: 210 + (i * 83) % 4100,
-      image: images[i % images.length]!,
+      image: demoPhoto(`ccm-item-${i}`),
       freeShipping: i % 2 === 0,
       leadDays: kind === 'file' ? null : [2 + (i % 3), 5 + (i % 5)],
       badges: i % 3 === 0 ? ['bestseller'] : i % 4 === 0 ? ['star-seller'] : [],
